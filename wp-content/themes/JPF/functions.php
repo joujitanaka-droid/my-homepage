@@ -11,7 +11,7 @@ function jpf_enqueue_styles() {
 }
 
 add_filter( 'wp_nav_menu_objects', 'jpf_fix_home_menu_links', 10, 2 );
-add_filter( 'template_include', 'jpf_use_english_slowth_template', 99 );
+add_filter( 'template_include', 'jpf_use_english_slowth_template', 9999 );
 add_filter( 'body_class', 'jpf_add_english_slowth_body_class' );
 add_filter( 'pre_get_document_title', 'jpf_english_slowth_document_title' );
 add_filter( 'redirect_canonical', 'jpf_disable_english_slowth_canonical_redirect', 10, 2 );
@@ -31,8 +31,13 @@ function jpf_is_english_slowth_request() {
 
 function jpf_is_english_home_request() {
     $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+    $path        = wp_parse_url( $request_uri, PHP_URL_PATH );
 
-    return '/en/' === untrailingslashit( $request_uri ) . '/';
+    if ( ! is_string( $path ) ) {
+        return false;
+    }
+
+    return '/en/' === untrailingslashit( $path ) . '/';
 }
 
 function jpf_get_normalized_path( $url ) {
