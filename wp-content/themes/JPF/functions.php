@@ -55,7 +55,6 @@ function jpf_get_english_menu_order_rank( $item ) {
 
     $order_map = array(
         '/en/'                      => 10,
-        '/en/top-2/'                => 10,
         '/en/会社概要-en/'            => 20,
         '/en/profile-en/'           => 20,
         '/en/業務内容-en/'            => 30,
@@ -87,11 +86,11 @@ function jpf_fix_home_menu_links( $items, $args ) {
         home_url( '/top/' )     => home_url( '/' ),
         home_url( '/?page_id=8' ) => home_url( '/' ),
         home_url( '/tophurui/' ) => home_url( '/' ),
+        home_url( '/en/top-2/' ) => home_url( '/en/' ),
     );
 
     $english_title_map = array(
         '/en/'                              => 'HOME',
-        '/en/top-2/'                        => 'HOME',
         '/en/会社概要-en/'                    => 'Profile',
         '/en/業務内容-en/'                    => 'Content',
         '/en/slowth/'                       => 'AI Robot',
@@ -127,10 +126,6 @@ function jpf_fix_home_menu_links( $items, $args ) {
         if ( jpf_is_english_request() ) {
             $normalized_path = jpf_get_normalized_path( $item->url );
 
-            if ( '/en/' === $normalized_path ) {
-                $item->url = home_url( '/en/top-2/' );
-            }
-
             if ( isset( $english_title_map[ $normalized_path ] ) ) {
                 $item->title = $english_title_map[ $normalized_path ];
             }
@@ -155,6 +150,23 @@ function jpf_fix_home_menu_links( $items, $args ) {
                 return $rank_a <=> $rank_b;
             }
         );
+
+        $seen_home = false;
+        foreach ( $items as $index => $item ) {
+            $normalized_path = jpf_get_normalized_path( $item->url );
+
+            if ( '/en/' === $normalized_path ) {
+                if ( $seen_home ) {
+                    unset( $items[ $index ] );
+                    continue;
+                }
+
+                $seen_home = true;
+                $item->title = 'HOME';
+            }
+        }
+
+        $items = array_values( $items );
     }
 
     return $items;
@@ -266,8 +278,8 @@ function jpf_redirect_legacy_top_page() {
         exit;
     }
 
-    if ( '/en/' === untrailingslashit( $request_uri ) . '/' ) {
-        wp_safe_redirect( home_url( '/en/top-2/' ), 301 );
+    if ( '/en/top-2/' === untrailingslashit( $request_uri ) . '/' ) {
+        wp_safe_redirect( home_url( '/en/' ), 301 );
         exit;
     }
 }
