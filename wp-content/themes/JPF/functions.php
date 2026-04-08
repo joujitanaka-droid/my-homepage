@@ -149,6 +149,11 @@ function jpf_fix_home_menu_links( $items, $args ) {
             if ( isset( $english_external_title_map[ $item->url ] ) ) {
                 $item->title = $english_external_title_map[ $item->url ];
             }
+
+            // 日本語言語スイッチャーに「日本語」ラベルを付ける
+            if ( $is_lang_item && is_array( $item->classes ) && in_array( 'lang-item-ja', $item->classes, true ) ) {
+                $item->title = '日本語';
+            }
         }
     }
 
