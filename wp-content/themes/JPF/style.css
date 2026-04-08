@@ -43,8 +43,9 @@ body.page-id-3337 p {
     line-height: 1.7;
 }
 
-body.page-id-3337 .site-footer .footer-bottom .builder-item p {
-    display: block !important;
+/* Hide the theme footer on landing pages that already include their own footer content. */
+:is(body.page-id-8, body.page-id-3337, body.page-id-3435, body.home) .site-footer {
+    display: none !important;
 }
 
 body.page-id-3337 .section {
