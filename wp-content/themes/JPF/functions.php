@@ -39,6 +39,37 @@ function jpf_get_normalized_path( $url ) {
     return untrailingslashit( urldecode( $path ) ) . '/';
 }
 
+function jpf_get_english_menu_order_rank( $item ) {
+    $normalized_path = jpf_get_normalized_path( $item->url );
+
+    $order_map = array(
+        '/en/'                      => 10,
+        '/en/会社概要-en/'            => 20,
+        '/en/profile-en/'           => 20,
+        '/en/業務内容-en/'            => 30,
+        '/en/content-en/'           => 30,
+        '/en/slowth/'               => 40,
+        '/en/factory-introduction/' => 50,
+        '/en/recruitment-2/'        => 60,
+        '/en/お問い合わせ-en/'        => 70,
+        '/en/contact-en/'           => 70,
+    );
+
+    if ( isset( $order_map[ $normalized_path ] ) ) {
+        return $order_map[ $normalized_path ];
+    }
+
+    if ( 'https://jpe.jp-factory.co.jp/' === $item->url ) {
+        return 80;
+    }
+
+    if ( 'https://jpf.diksoftware.online/view/customer_login' === $item->url ) {
+        return 90;
+    }
+
+    return 1000;
+}
+
 function jpf_fix_home_menu_links( $items, $args ) {
     $legacy_url_map = array(
         home_url( '/top/' )     => home_url( '/' ),
@@ -92,6 +123,22 @@ function jpf_fix_home_menu_links( $items, $args ) {
                 $item->title = $english_external_title_map[ $item->url ];
             }
         }
+    }
+
+    if ( jpf_is_english_request() ) {
+        usort(
+            $items,
+            function ( $a, $b ) {
+                $rank_a = jpf_get_english_menu_order_rank( $a );
+                $rank_b = jpf_get_english_menu_order_rank( $b );
+
+                if ( $rank_a === $rank_b ) {
+                    return (int) $a->menu_order <=> (int) $b->menu_order;
+                }
+
+                return $rank_a <=> $rank_b;
+            }
+        );
     }
 
     return $items;
