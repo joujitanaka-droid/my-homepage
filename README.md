@@ -50,3 +50,8 @@ Variables（Repository variables、任意）:
 - 必要なら Required reviewers を設定（誤デプロイ防止）
 
 設定後は、子テーマ変更の push ごとに本番へ自動デプロイされます。
+
+補足:
+
+- ワークフローに `Preflight checks` を追加済みです。
+- Secrets/Variables 未設定や値不正の場合は、FTP接続前に明確なエラーで停止します。

@@ -29,6 +29,48 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Preflight checks
+        shell: bash
+        env:
+          XSERVER_FTP_HOST: ${{ secrets.XSERVER_FTP_HOST }}
+          XSERVER_FTP_USERNAME: ${{ secrets.XSERVER_FTP_USERNAME }}
+          XSERVER_FTP_PASSWORD: ${{ secrets.XSERVER_FTP_PASSWORD }}
+          XSERVER_FTP_PROTOCOL: ${{ vars.XSERVER_FTP_PROTOCOL || 'ftps' }}
+          XSERVER_FTP_PORT: ${{ vars.XSERVER_FTP_PORT || 21 }}
+          XSERVER_CHILD_THEME_DIR: ${{ vars.XSERVER_CHILD_THEME_DIR || '/public_html/wp-content/themes/JPF/' }}
+        run: |
+          set -euo pipefail
+
+          echo "Deploy target: wp-content/themes/JPF"
+          echo "Protocol: ${XSERVER_FTP_PROTOCOL}"
+          echo "Port: ${XSERVER_FTP_PORT}"
+          echo "Server dir: ${XSERVER_CHILD_THEME_DIR}"
+
+          if [[ ! -d "wp-content/themes/JPF" ]]; then
+            echo "ERROR: local-dir wp-content/themes/JPF does not exist."
+            exit 1
+          fi
+
+          if [[ -z "${XSERVER_FTP_HOST}" ]]; then
+            echo "ERROR: Secret XSERVER_FTP_HOST is not set."
+            exit 1
+          fi
+
+          if [[ -z "${XSERVER_FTP_USERNAME}" ]]; then
+            echo "ERROR: Secret XSERVER_FTP_USERNAME is not set."
+            exit 1
+          fi
+
+          if [[ -z "${XSERVER_FTP_PASSWORD}" ]]; then
+            echo "ERROR: Secret XSERVER_FTP_PASSWORD is not set."
+            exit 1
+          fi
+
+          if [[ "${XSERVER_FTP_PROTOCOL}" != "ftp" && "${XSERVER_FTP_PROTOCOL}" != "ftps" ]]; then
+            echo "ERROR: XSERVER_FTP_PROTOCOL must be ftp or ftps."
+            exit 1
+          fi
+
       - name: Deploy JPF child theme via FTP/FTPS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
