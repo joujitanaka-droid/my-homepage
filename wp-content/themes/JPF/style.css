@@ -1,4 +1,38 @@
 /* TOP page cleanup: hide sidebar/archive/category and auto post listings. */
+:root {
+    --jpf-header-max-width: min(98vw, 1560px);
+}
+
+@media (min-width: 961px) {
+    #header-grid .header-main .container {
+        max-width: var(--jpf-header-max-width);
+    }
+
+    #header-grid .builder-item--logo .site-logo img {
+        width: auto;
+        max-width: 340px;
+        max-height: 54px;
+    }
+
+    #header-grid .builder-item--primary-menu .primary-menu-ul {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 6px;
+    }
+
+    #header-grid .builder-item--primary-menu .primary-menu-ul > li {
+        flex: 0 0 auto;
+    }
+
+    #header-grid .builder-item--primary-menu .primary-menu-ul > li > .wrap > a {
+        white-space: nowrap;
+        font-size: 16px;
+        line-height: 1.2;
+        padding: 2px 6px;
+    }
+}
+
 :is(body.page-id-8, body.page-id-13, body.page-id-17, body.page-id-20, body.page-id-23, body.page-id-26, body.page-id-878, body.page-id-1012, body.page-id-1108, body.page-id-1113, body.page-id-1121, body.page-id-3435, body.home) .nv-sidebar-wrap,
 :is(body.page-id-8, body.page-id-13, body.page-id-17, body.page-id-20, body.page-id-23, body.page-id-26, body.page-id-878, body.page-id-1012, body.page-id-1108, body.page-id-1113, body.page-id-1121, body.page-id-3435, body.home) .widget_archive,
 :is(body.page-id-8, body.page-id-13, body.page-id-17, body.page-id-20, body.page-id-23, body.page-id-26, body.page-id-878, body.page-id-1012, body.page-id-1108, body.page-id-1113, body.page-id-1121, body.page-id-3435, body.home) .widget_categories,
