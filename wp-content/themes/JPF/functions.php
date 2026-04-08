@@ -6,6 +6,7 @@ function jpf_fix_home_menu_links( $items, $args ) {
     $legacy_url_map = array(
         home_url( '/top/' )     => home_url( '/' ),
         home_url( '/?page_id=8' ) => home_url( '/' ),
+        home_url( '/tophurui/' ) => home_url( '/' ),
         home_url( '/en/top-2/' ) => home_url( '/en/' ),
     );
 
@@ -30,6 +31,7 @@ function jpf_redirect_legacy_top_page() {
 
     if (
         '/top/' === untrailingslashit( $request_uri ) . '/' ||
+        '/tophurui/' === untrailingslashit( $request_uri ) . '/' ||
         '/en/top-2/' === untrailingslashit( $request_uri ) . '/' ||
         '8' === $page_id
     ) {
