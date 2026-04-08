@@ -17,6 +17,7 @@ add_filter( 'pre_get_document_title', 'jpf_english_slowth_document_title' );
 add_filter( 'redirect_canonical', 'jpf_disable_english_slowth_canonical_redirect', 10, 2 );
 add_filter( 'pll_check_canonical_url', 'jpf_disable_english_slowth_polylang_canonical' );
 add_action( 'init', 'jpf_force_redirect_english_top2', 1 );
+add_action( 'template_redirect', 'jpf_force_render_english_home', 0 );
 
 function jpf_is_english_request() {
     $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
@@ -303,4 +304,18 @@ function jpf_force_redirect_english_top2() {
         wp_safe_redirect( home_url( '/en/' ), 301 );
         exit;
     }
+}
+
+function jpf_force_render_english_home() {
+    if ( is_admin() || wp_doing_ajax() ) {
+        return;
+    }
+
+    if ( ! jpf_is_english_home_request() ) {
+        return;
+    }
+
+    status_header( 200 );
+    include get_stylesheet_directory() . '/template-top-en.php';
+    exit;
 }
