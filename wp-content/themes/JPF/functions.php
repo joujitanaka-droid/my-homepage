@@ -55,6 +55,7 @@ function jpf_get_english_menu_order_rank( $item ) {
 
     $order_map = array(
         '/en/'                      => 10,
+        '/en/top-2/'                => 10,
         '/en/会社概要-en/'            => 20,
         '/en/profile-en/'           => 20,
         '/en/業務内容-en/'            => 30,
@@ -86,11 +87,11 @@ function jpf_fix_home_menu_links( $items, $args ) {
         home_url( '/top/' )     => home_url( '/' ),
         home_url( '/?page_id=8' ) => home_url( '/' ),
         home_url( '/tophurui/' ) => home_url( '/' ),
-        home_url( '/en/top-2/' ) => home_url( '/en/' ),
     );
 
     $english_title_map = array(
         '/en/'                              => 'HOME',
+        '/en/top-2/'                        => 'HOME',
         '/en/会社概要-en/'                    => 'Profile',
         '/en/業務内容-en/'                    => 'Content',
         '/en/slowth/'                       => 'AI Robot',
@@ -125,6 +126,10 @@ function jpf_fix_home_menu_links( $items, $args ) {
 
         if ( jpf_is_english_request() ) {
             $normalized_path = jpf_get_normalized_path( $item->url );
+
+            if ( '/en/' === $normalized_path ) {
+                $item->url = home_url( '/en/top-2/' );
+            }
 
             if ( isset( $english_title_map[ $normalized_path ] ) ) {
                 $item->title = $english_title_map[ $normalized_path ];
@@ -255,11 +260,14 @@ function jpf_redirect_legacy_top_page() {
     if (
         '/top/' === untrailingslashit( $request_uri ) . '/' ||
         '/tophurui/' === untrailingslashit( $request_uri ) . '/' ||
-        '/en/top-2/' === untrailingslashit( $request_uri ) . '/' ||
         '8' === $page_id
     ) {
-        $redirect_to = '/en/top-2/' === untrailingslashit( $request_uri ) . '/' ? home_url( '/en/' ) : home_url( '/' );
-        wp_safe_redirect( $redirect_to, 301 );
+        wp_safe_redirect( home_url( '/' ), 301 );
+        exit;
+    }
+
+    if ( '/en/' === untrailingslashit( $request_uri ) . '/' ) {
+        wp_safe_redirect( home_url( '/en/top-2/' ), 301 );
         exit;
     }
 }
