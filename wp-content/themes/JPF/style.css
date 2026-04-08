@@ -967,6 +967,45 @@ body.page-id-3435 .company-links a {
     display: none !important;
 }
 
+/* Style language switchers with flag icons */
+.lang-item-en a,
+.lang-item-ja a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 16px;
+    padding: 0 !important;
+    margin: 0 4px !important;
+}
+
+.lang-item-en a::before,
+.lang-item-ja a::before {
+    content: '' !important;
+    display: inline-block;
+    width: 24px;
+    height: 16px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.lang-item-en a::before {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30"><rect width="60" height="30" fill="%230052CC"/><path d="M0 0L60 30M60 0L0 30" stroke="white" stroke-width="6"/><path d="M0 0L60 30M60 0L0 30" stroke="%23C8102E" stroke-width="4"/><rect width="60" height="30" fill="none" stroke="white" stroke-width="1"/></svg>');
+}
+
+.lang-item-ja a::before {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30"><rect width="60" height="30" fill="white"/><circle cx="30" cy="15" r="12" fill="%23BC002D"/><rect width="60" height="30" fill="none" stroke="%23999" stroke-width="0.5"/></svg>');
+}
+
+.lang-item-en a,
+.lang-item-ja a {
+    font-size: 0 !important;
+    color: transparent !important;
+    text-indent: -9999px;
+    white-space: nowrap;
+}
+
 /* Deploy trigger: 2026-04-08 password updated retry */
 
 /* Deploy trigger: 2026-04-08 FTP credentials corrected - retry #2 */
