@@ -166,20 +166,21 @@ function jpf_fix_home_menu_links( $items, $args ) {
             }
         );
 
-        $seen_home = false;
+        // URL正規化（/en/top-2/ → /en/ に統一）
+        foreach ( $items as $item ) {
+            if ( '/en/top-2/' === jpf_get_normalized_path( $item->url ) ) {
+                $item->url = home_url( '/en/' );
+            }
+        }
+
+        // URL重複除去（同一パスのアイテムを1つに絞る）
+        $seen_paths = array();
         foreach ( $items as $index => $item ) {
             $normalized_path = jpf_get_normalized_path( $item->url );
-
-            if ( '/en/' === $normalized_path || '/en/top-2/' === $normalized_path ) {
-                $item->url = home_url( '/en/' );
-
-                if ( $seen_home ) {
-                    unset( $items[ $index ] );
-                    continue;
-                }
-
-                $seen_home = true;
-                $item->title = 'HOME';
+            if ( isset( $seen_paths[ $normalized_path ] ) ) {
+                unset( $items[ $index ] );
+            } else {
+                $seen_paths[ $normalized_path ] = true;
             }
         }
 
