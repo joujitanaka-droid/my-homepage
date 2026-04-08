@@ -1006,6 +1006,37 @@ body.page-id-3435 .company-links a {
     white-space: nowrap;
 }
 
+/* Company signature styling - fix cutoff and improve layout */
+.wp-image-2832,
+figure.wp-block-image img[alt*="代表取締役"] {
+    max-width: 100% !important;
+    width: auto !important;
+    height: auto !important;
+    display: block;
+    margin: 20px auto 0;
+}
+
+figure.wp-block-image[class*="wp-block-image"] img[alt*="代表取締役"] {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+/* Container for signature - ensure no overflow */
+figure.wp-block-image:has(img[alt*="代表取締役"]) {
+    margin: 20px 0 !important;
+    overflow: visible !important;
+}
+
+/* Ensure text elements in company info have correct styling */
+:is(body.page-id-13, body.page-id-17, body.page-id-20, body.page-id-23, body.page-id-26) .nv-content-wrap p:has(+ figure.wp-block-image) {
+    margin-bottom: 8px;
+}
+
+/* Adjust company info section container for proper signature display */
+:is(body.page-id-13, body.page-id-17, body.page-id-20, body.page-id-23, body.page-id-26) .nv-content-wrap {
+    overflow-x: visible !important;
+}
+
 /* Deploy trigger: 2026-04-08 password updated retry */
 
 /* Deploy trigger: 2026-04-08 FTP credentials corrected - retry #2 */
