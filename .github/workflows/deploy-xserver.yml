@@ -37,7 +37,7 @@ jobs:
           XSERVER_FTP_PASSWORD: ${{ vars.XSERVER_FTP_PASSWORD }}
           XSERVER_FTP_PROTOCOL: ${{ vars.XSERVER_FTP_PROTOCOL || 'ftps' }}
           XSERVER_FTP_PORT: ${{ vars.XSERVER_FTP_PORT || 21 }}
-          XSERVER_CHILD_THEME_DIR: ${{ vars.XSERVER_CHILD_THEME_DIR || '/public_html/wp-content/themes/JPF/' }}
+          XSERVER_CHILD_THEME_DIR: /jp-factory.co.jp/public_html/wp-content/themes/JPF/
         run: |
           set -euo pipefail
 
@@ -80,7 +80,7 @@ jobs:
           protocol: ${{ vars.XSERVER_FTP_PROTOCOL || 'ftps' }}
           port: ${{ vars.XSERVER_FTP_PORT || 21 }}
           local-dir: ./wp-content/themes/JPF/
-          server-dir: ${{ vars.XSERVER_CHILD_THEME_DIR || '/public_html/wp-content/themes/JPF/' }}
+          server-dir: /jp-factory.co.jp/public_html/wp-content/themes/JPF/
           exclude: |
             **/.git*
             **/.github/**
