@@ -131,12 +131,13 @@ function jpf_fix_home_menu_links( $items, $args ) {
         }
 
         if ( jpf_is_english_request() ) {
+            $is_lang_item = is_array( $item->classes ) && in_array( 'lang-item', $item->classes, true );
             $normalized_path = jpf_get_normalized_path( $item->url );
 
-            // 日本語URLを英語URLに変換（内部URLのみ）
+            // 日本語URLを英語URLに変換（内部URLのみ、言語スイッチャーは除外）
             $item_host = wp_parse_url( $item->url, PHP_URL_HOST );
             $home_host = wp_parse_url( home_url(), PHP_URL_HOST );
-            if ( $item_host === $home_host && isset( $jp_to_en_path_map[ $normalized_path ] ) ) {
+            if ( ! $is_lang_item && $item_host === $home_host && isset( $jp_to_en_path_map[ $normalized_path ] ) ) {
                 $item->url       = home_url( $jp_to_en_path_map[ $normalized_path ] );
                 $normalized_path = jpf_get_normalized_path( $item->url );
             }
@@ -173,9 +174,13 @@ function jpf_fix_home_menu_links( $items, $args ) {
             }
         }
 
-        // URL重複除去（同一パスのアイテムを1つに絞る）
+        // URL重複除去（同一パスのアイテムを1つに絞る、言語スイッチャーは除外）
         $seen_paths = array();
         foreach ( $items as $index => $item ) {
+            $is_lang_item = is_array( $item->classes ) && in_array( 'lang-item', $item->classes, true );
+            if ( $is_lang_item ) {
+                continue;
+            }
             $normalized_path = jpf_get_normalized_path( $item->url );
             if ( isset( $seen_paths[ $normalized_path ] ) ) {
                 unset( $items[ $index ] );
