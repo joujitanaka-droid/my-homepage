@@ -14,6 +14,8 @@ add_filter( 'wp_nav_menu_objects', 'jpf_fix_home_menu_links', 10, 2 );
 add_filter( 'template_include', 'jpf_use_english_slowth_template', 99 );
 add_filter( 'body_class', 'jpf_add_english_slowth_body_class' );
 add_filter( 'pre_get_document_title', 'jpf_english_slowth_document_title' );
+add_filter( 'redirect_canonical', 'jpf_disable_english_slowth_canonical_redirect', 10, 2 );
+add_filter( 'pll_check_canonical_url', 'jpf_disable_english_slowth_polylang_canonical' );
 
 function jpf_is_english_request() {
     $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
@@ -89,6 +91,22 @@ function jpf_english_slowth_document_title( $title ) {
     }
 
     return 'SlowTH - JPF';
+}
+
+function jpf_disable_english_slowth_canonical_redirect( $redirect_url, $requested_url ) {
+    if ( jpf_is_english_slowth_request() ) {
+        return false;
+    }
+
+    return $redirect_url;
+}
+
+function jpf_disable_english_slowth_polylang_canonical( $check_canonical ) {
+    if ( jpf_is_english_slowth_request() ) {
+        return false;
+    }
+
+    return $check_canonical;
 }
 
 add_action( 'template_redirect', 'jpf_redirect_legacy_top_page' );
