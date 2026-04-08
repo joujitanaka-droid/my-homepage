@@ -464,13 +464,15 @@ body.page-id-3435 .hua-letter {
 
 /* Motto logo */
 :is(body.page-id-8, body.page-id-3435, body.home) .motto-logo-wrap {
-    margin: 0 0 18px;
+    display: flex;
+    justify-content: center;
+    margin: 0 0 24px;
 }
 
 :is(body.page-id-8, body.page-id-3435, body.home) .motto-logo {
     display: block;
-    max-width: 170px;
-    width: min(100%, 170px);
+    max-width: 220px;
+    width: min(100%, 220px);
     height: auto;
 }
 
@@ -478,8 +480,8 @@ body.page-id-3435 .hua-letter {
 :is(body.page-id-8, body.page-id-3435, body.home) .wp-image-3145,
 :is(body.page-id-8, body.page-id-3435, body.home) .wp-block-image.is-resized img[src*="/wp-content/uploads/2024/03/HUA2"],
 :is(body.page-id-8, body.page-id-3435, body.home) img.motto-logo[src*="/wp-content/uploads/2024/03/HUA2"] {
-    width: 170px !important;
-    max-width: 170px !important;
+    width: 220px !important;
+    max-width: 220px !important;
     height: auto !important;
 }
 
@@ -487,8 +489,8 @@ body.page-id-3435 .hua-letter {
     :is(body.page-id-8, body.page-id-3435, body.home) .wp-image-3145,
     :is(body.page-id-8, body.page-id-3435, body.home) .wp-block-image.is-resized img[src*="/wp-content/uploads/2024/03/HUA2"],
     :is(body.page-id-8, body.page-id-3435, body.home) img.motto-logo[src*="/wp-content/uploads/2024/03/HUA2"] {
-        width: 150px !important;
-        max-width: 150px !important;
+        width: 190px !important;
+        max-width: 190px !important;
     }
 
     body.page-id-3435 .hua-mark {
