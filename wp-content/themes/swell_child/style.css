@@ -308,8 +308,25 @@ body.page-id-3435 .lead {
 
 /* Override inline widths from WordPress blocks in Motto section */
 :is(body.page-id-8, body.page-id-3435, body.home) .wp-image-3145 {
-    width: min(220px, 72vw) !important;
+    width: 170px !important;
+    max-width: 170px !important;
     height: auto !important;
+}
+
+:is(body.page-id-8, body.page-id-3435, body.home) .wp-block-image.is-resized img[src*="/wp-content/uploads/2024/03/HUA2"],
+:is(body.page-id-8, body.page-id-3435, body.home) img.motto-logo[src*="/wp-content/uploads/2024/03/HUA2"] {
+    width: 170px !important;
+    max-width: 170px !important;
+    height: auto !important;
+}
+
+@media (max-width: 640px) {
+    :is(body.page-id-8, body.page-id-3435, body.home) .wp-image-3145,
+    :is(body.page-id-8, body.page-id-3435, body.home) .wp-block-image.is-resized img[src*="/wp-content/uploads/2024/03/HUA2"],
+    :is(body.page-id-8, body.page-id-3435, body.home) img.motto-logo[src*="/wp-content/uploads/2024/03/HUA2"] {
+        width: 150px !important;
+        max-width: 150px !important;
+    }
 }
 
 :is(body.page-id-8, body.page-id-3435, body.home) img[src*="/2026/04/hayakute.png"],
