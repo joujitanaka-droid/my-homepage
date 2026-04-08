@@ -76,6 +76,11 @@ function jpf_get_english_menu_order_rank( $item ) {
         return 80;
     }
 
+    // 日本語スイッチャー（lang-item-ja）
+    if ( is_array( $item->classes ) && in_array( 'lang-item-ja', $item->classes, true ) ) {
+        return 85;
+    }
+
     if ( 'https://jpf.diksoftware.online/view/customer_login' === $item->url ) {
         return 90;
     }
