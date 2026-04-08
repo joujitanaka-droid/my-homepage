@@ -20,9 +20,9 @@
 
 ## Xserver自動反映（GitHub Actions）
 
-本番事故を防ぐため、現在は「子テーマのみ」を自動反映します。
+本番事故を防ぐため、現在は「JPF子テーマのみ」を自動反映します。
 
-- 自動反映対象: `wp-content/themes/swell_child/**`
+- 自動反映対象: `wp-content/themes/JPF/**`
 - 反映トリガー: `main` への push（上記パスに変更がある場合のみ）
 - 手動実行: Actions の `workflow_dispatch` でも実行可能
 
@@ -42,7 +42,7 @@ Variables（Repository variables、任意）:
 
 - XSERVER_FTP_PROTOCOL: ftp または ftps（未設定時は ftps）
 - XSERVER_FTP_PORT: 21 など（未設定時は 21）
-- XSERVER_CHILD_THEME_DIR: /public_html/wp-content/themes/swell_child/（未設定時はこの値）
+- XSERVER_CHILD_THEME_DIR: /public_html/wp-content/themes/JPF/（未設定時はこの値）
 
 推奨設定（GitHub Settings > Environments > production）:
 

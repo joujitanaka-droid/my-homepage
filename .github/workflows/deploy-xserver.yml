@@ -4,17 +4,17 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "wp-content/themes/swell_child/**"
+      - "wp-content/themes/JPF/**"
       - ".github/workflows/deploy-xserver.yml"
   workflow_dispatch:
     inputs:
       target:
         description: "Deploy target"
         required: true
-        default: "swell_child"
+        default: "jpf"
         type: choice
         options:
-          - swell_child
+          - jpf
 
 concurrency:
   group: deploy-xserver-production
@@ -29,7 +29,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy child theme via FTP/FTPS
+      - name: Deploy JPF child theme via FTP/FTPS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.XSERVER_FTP_HOST }}
@@ -37,8 +37,8 @@ jobs:
           password: ${{ secrets.XSERVER_FTP_PASSWORD }}
           protocol: ${{ vars.XSERVER_FTP_PROTOCOL || 'ftps' }}
           port: ${{ vars.XSERVER_FTP_PORT || 21 }}
-          local-dir: ./wp-content/themes/swell_child/
-          server-dir: ${{ vars.XSERVER_CHILD_THEME_DIR || '/public_html/wp-content/themes/swell_child/' }}
+          local-dir: ./wp-content/themes/JPF/
+          server-dir: ${{ vars.XSERVER_CHILD_THEME_DIR || '/public_html/wp-content/themes/JPF/' }}
           exclude: |
             **/.git*
             **/.github/**
