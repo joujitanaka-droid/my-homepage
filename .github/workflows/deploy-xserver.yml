@@ -32,9 +32,9 @@ jobs:
       - name: Preflight checks
         shell: bash
         env:
-          XSERVER_FTP_HOST: ${{ secrets.XSERVER_FTP_HOST }}
-          XSERVER_FTP_USERNAME: ${{ secrets.XSERVER_FTP_USERNAME }}
-          XSERVER_FTP_PASSWORD: ${{ secrets.XSERVER_FTP_PASSWORD }}
+          XSERVER_FTP_HOST: ${{ secrets.XSERVER_FTP_HOST || vars.XSERVER_FTP_HOST }}
+          XSERVER_FTP_USERNAME: ${{ secrets.XSERVER_FTP_USERNAME || vars.XSERVER_FTP_USERNAME }}
+          XSERVER_FTP_PASSWORD: ${{ secrets.XSERVER_FTP_PASSWORD || vars.XSERVER_FTP_PASSWORD }}
           XSERVER_FTP_PROTOCOL: ${{ vars.XSERVER_FTP_PROTOCOL || 'ftps' }}
           XSERVER_FTP_PORT: ${{ vars.XSERVER_FTP_PORT || 21 }}
           XSERVER_CHILD_THEME_DIR: ${{ vars.XSERVER_CHILD_THEME_DIR || '/public_html/wp-content/themes/JPF/' }}
@@ -74,9 +74,9 @@ jobs:
       - name: Deploy JPF child theme via FTP/FTPS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.XSERVER_FTP_HOST }}
-          username: ${{ secrets.XSERVER_FTP_USERNAME }}
-          password: ${{ secrets.XSERVER_FTP_PASSWORD }}
+          server: ${{ secrets.XSERVER_FTP_HOST || vars.XSERVER_FTP_HOST }}
+          username: ${{ secrets.XSERVER_FTP_USERNAME || vars.XSERVER_FTP_USERNAME }}
+          password: ${{ secrets.XSERVER_FTP_PASSWORD || vars.XSERVER_FTP_PASSWORD }}
           protocol: ${{ vars.XSERVER_FTP_PROTOCOL || 'ftps' }}
           port: ${{ vars.XSERVER_FTP_PORT || 21 }}
           local-dir: ./wp-content/themes/JPF/
