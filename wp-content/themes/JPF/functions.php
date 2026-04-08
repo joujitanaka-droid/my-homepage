@@ -115,18 +115,29 @@ function jpf_fix_home_menu_links( $items, $args ) {
         'https://jpf.diksoftware.online/view/customer_login' => 'Customer Login',
     );
 
+    $jp_to_en_path_map = array(
+        '/'                => '/en/',
+        '/slowth/'         => '/en/slowth/',
+        '/profile/'        => '/en/会社概要-en/',
+        '/content/'        => '/en/業務内容-en/',
+        '/introduction-2/' => '/en/factory-introduction/',
+        '/recruitment/'    => '/en/recruitment-2/',
+        '/contact/'        => '/en/お問い合わせ-en/',
+    );
+
     foreach ( $items as $item ) {
         if ( isset( $legacy_url_map[ $item->url ] ) ) {
             $item->url = $legacy_url_map[ $item->url ];
         }
 
-        if ( jpf_is_english_request() && home_url( '/slowth/' ) === $item->url ) {
-            $item->url   = home_url( '/en/slowth/' );
-            $item->title = 'AI Robot';
-        }
-
         if ( jpf_is_english_request() ) {
             $normalized_path = jpf_get_normalized_path( $item->url );
+
+            // 日本語URLを英語URLに変換
+            if ( isset( $jp_to_en_path_map[ $normalized_path ] ) ) {
+                $item->url       = home_url( $jp_to_en_path_map[ $normalized_path ] );
+                $normalized_path = jpf_get_normalized_path( $item->url );
+            }
 
             if ( isset( $english_title_map[ $normalized_path ] ) ) {
                 $item->title = $english_title_map[ $normalized_path ];
