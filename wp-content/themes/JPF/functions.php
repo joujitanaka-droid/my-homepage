@@ -1,5 +1,15 @@
 <?php
 
+add_action( 'wp_enqueue_scripts', 'jpf_enqueue_styles' );
+function jpf_enqueue_styles() {
+    wp_enqueue_style(
+        'jpf-child-style',
+        get_stylesheet_uri(),
+        array( 'neve-style' ),
+        filemtime( get_stylesheet_directory() . '/style.css' )
+    );
+}
+
 add_filter( 'wp_nav_menu_objects', 'jpf_fix_home_menu_links', 10, 2 );
 
 function jpf_fix_home_menu_links( $items, $args ) {
