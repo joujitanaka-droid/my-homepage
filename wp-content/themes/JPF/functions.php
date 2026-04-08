@@ -133,8 +133,10 @@ function jpf_fix_home_menu_links( $items, $args ) {
         if ( jpf_is_english_request() ) {
             $normalized_path = jpf_get_normalized_path( $item->url );
 
-            // 日本語URLを英語URLに変換
-            if ( isset( $jp_to_en_path_map[ $normalized_path ] ) ) {
+            // 日本語URLを英語URLに変換（内部URLのみ）
+            $item_host = wp_parse_url( $item->url, PHP_URL_HOST );
+            $home_host = wp_parse_url( home_url(), PHP_URL_HOST );
+            if ( $item_host === $home_host && isset( $jp_to_en_path_map[ $normalized_path ] ) ) {
                 $item->url       = home_url( $jp_to_en_path_map[ $normalized_path ] );
                 $normalized_path = jpf_get_normalized_path( $item->url );
             }
