@@ -131,7 +131,7 @@ body.page-id-3435 .hero {
     justify-content: flex-end;
     background:
         linear-gradient(110deg, rgba(10, 28, 44, 0.86) 0%, rgba(8, 49, 88, 0.58) 58%, rgba(15, 76, 129, 0.35) 100%),
-        url("https://jp-factory.co.jp/wp-content/uploads/2024/03/IMG_0730-1536x1152.jpg") center/cover no-repeat;
+        url("/wp-content/uploads/2024/03/IMG_0730-1536x1152.jpg") center/cover no-repeat;
     box-shadow: 0 14px 28px rgba(16, 28, 44, 0.12);
 }
 
@@ -275,15 +275,15 @@ body.page-id-3435 .lead {
 }
 
 :is(body.page-id-8, body.page-id-3435, body.home) .hua-item:nth-child(1) .hua-letter {
-    background-image: url("https://jp-factory.co.jp/wp-content/uploads/2026/04/hayakute.png");
+    background-image: url("/wp-content/uploads/2026/04/hayakute.png");
 }
 
 :is(body.page-id-8, body.page-id-3435, body.home) .hua-item:nth-child(2) .hua-letter {
-    background-image: url("https://jp-factory.co.jp/wp-content/uploads/2026/04/umakute.png");
+    background-image: url("/wp-content/uploads/2026/04/umakute.png");
 }
 
 :is(body.page-id-8, body.page-id-3435, body.home) .hua-item:nth-child(3) .hua-letter {
-    background-image: url("https://jp-factory.co.jp/wp-content/uploads/2026/04/aisogaii.png");
+    background-image: url("/wp-content/uploads/2026/04/aisogaii.png");
 }
 
 :is(body.page-id-8, body.page-id-3435, body.home) .hua-mark {
