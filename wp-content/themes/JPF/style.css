@@ -960,6 +960,13 @@ body.page-id-3435 .company-links a {
     }
 }
 
+/* Hide page title "TOP" on top page and home. */
+:is(body.page-id-8, body.page-id-3435, body.home) .nv-page-title-wrap,
+:is(body.page-id-8, body.page-id-3435, body.home) .entry-header,
+:is(body.page-id-8, body.page-id-3435, body.home) .nv-title-meta-wrap {
+    display: none !important;
+}
+
 /* Deploy trigger: 2026-04-08 password updated retry */
 
 /* Deploy trigger: 2026-04-08 FTP credentials corrected - retry #2 */
@@ -971,4 +978,6 @@ body.page-id-3435 .company-links a {
 /* Deploy trigger: 2026-04-08 retry with jpf@jp-factory.co.jp */
 
 /* Deploy trigger: 2026-04-08 retry with dedicated FTP account */
+
+/* 2026-04-09: Hide TOP page title and restore English language switcher logo */
 
