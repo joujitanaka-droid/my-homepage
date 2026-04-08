@@ -435,6 +435,14 @@ body.page-id-3435 .hua-item {
     box-shadow: 0 6px 16px rgba(12, 28, 44, 0.06);
 }
 
+body.page-id-3435 .hua-mark {
+    display: block;
+    width: 140px;
+    max-width: 100%;
+    height: auto;
+    margin: 0 0 18px;
+}
+
 body.page-id-3435 .lead {
     margin: 4px 0 8px;
     font-weight: 800;
@@ -481,6 +489,10 @@ body.page-id-3435 .hua-letter {
     :is(body.page-id-8, body.page-id-3435, body.home) img.motto-logo[src*="/wp-content/uploads/2024/03/HUA2"] {
         width: 150px !important;
         max-width: 150px !important;
+    }
+
+    body.page-id-3435 .hua-mark {
+        width: 120px;
     }
 }
 
