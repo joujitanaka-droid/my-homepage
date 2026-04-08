@@ -29,12 +29,46 @@ function jpf_is_english_slowth_request() {
     return '/en/slowth/' === untrailingslashit( $request_uri ) . '/';
 }
 
+function jpf_get_normalized_path( $url ) {
+    $path = wp_parse_url( $url, PHP_URL_PATH );
+
+    if ( ! is_string( $path ) ) {
+        return '';
+    }
+
+    return untrailingslashit( urldecode( $path ) ) . '/';
+}
+
 function jpf_fix_home_menu_links( $items, $args ) {
     $legacy_url_map = array(
         home_url( '/top/' )     => home_url( '/' ),
         home_url( '/?page_id=8' ) => home_url( '/' ),
         home_url( '/tophurui/' ) => home_url( '/' ),
         home_url( '/en/top-2/' ) => home_url( '/en/' ),
+    );
+
+    $english_title_map = array(
+        '/en/'                              => 'HOME',
+        '/en/会社概要-en/'                    => 'Profile',
+        '/en/業務内容-en/'                    => 'Content',
+        '/en/slowth/'                       => 'AI Robot',
+        '/en/factory-introduction/'         => 'Factory',
+        '/en/recruitment-2/'                => 'Recruitment',
+        '/en/お問い合わせ-en/'                => 'Contact',
+        '/en/contact-en/'                   => 'Contact',
+        '/slowth/'                          => 'AI Robot',
+        '/contact/'                         => 'Contact',
+        '/recruitment/'                     => 'Recruitment',
+        '/introduction-2/'                  => 'Factory',
+        '/content/'                         => 'Content',
+        '/profile/'                         => 'Profile',
+        '/en/'                              => 'HOME',
+        '/en/slowth/'                       => 'AI Robot',
+    );
+
+    $english_external_title_map = array(
+        'https://jpe.jp-factory.co.jp/'                      => 'JPF Engineering',
+        'https://jpf.diksoftware.online/view/customer_login' => 'Customer Login',
     );
 
     foreach ( $items as $item ) {
@@ -44,7 +78,19 @@ function jpf_fix_home_menu_links( $items, $args ) {
 
         if ( jpf_is_english_request() && home_url( '/slowth/' ) === $item->url ) {
             $item->url   = home_url( '/en/slowth/' );
-            $item->title = 'AI_ロボット';
+            $item->title = 'AI Robot';
+        }
+
+        if ( jpf_is_english_request() ) {
+            $normalized_path = jpf_get_normalized_path( $item->url );
+
+            if ( isset( $english_title_map[ $normalized_path ] ) ) {
+                $item->title = $english_title_map[ $normalized_path ];
+            }
+
+            if ( isset( $english_external_title_map[ $item->url ] ) ) {
+                $item->title = $english_external_title_map[ $item->url ];
+            }
         }
     }
 
