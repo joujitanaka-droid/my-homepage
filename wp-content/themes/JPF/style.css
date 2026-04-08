@@ -1037,6 +1037,31 @@ figure.wp-block-image:has(img[alt*="代表取締役"]) {
     overflow-x: visible !important;
 }
 
+/* SlowTH page (page-id-3337) - unified photo sizes and remove captions */
+body.page-id-3337 figure.wp-block-image {
+    margin: 0 0 24px 0 !important;
+}
+
+body.page-id-3337 figure.wp-block-image img {
+    width: 100% !important;
+    height: 300px !important;
+    object-fit: cover !important;
+    display: block;
+}
+
+body.page-id-3337 figure.wp-block-image figcaption {
+    display: none !important;
+}
+
+/* Ensure gallery container displays uniformly */
+body.page-id-3337 .wp-block-gallery,
+body.page-id-3337 .gallery {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    gap: 20px !important;
+    margin: 20px 0 !important;
+}
+
 /* Deploy trigger: 2026-04-08 password updated retry */
 
 /* Deploy trigger: 2026-04-08 FTP credentials corrected - retry #2 */
