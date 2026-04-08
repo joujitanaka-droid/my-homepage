@@ -1,29 +1,178 @@
 /* TOP page cleanup: hide sidebar/archive/category and auto post listings. */
-:is(body.page-id-8, body.page-id-3435, body.home) .nv-sidebar-wrap,
-:is(body.page-id-8, body.page-id-3435, body.home) .widget_archive,
-:is(body.page-id-8, body.page-id-3435, body.home) .widget_categories,
-:is(body.page-id-8, body.page-id-3435, body.home) .wp-block-archives,
-:is(body.page-id-8, body.page-id-3435, body.home) .wp-block-categories,
-:is(body.page-id-8, body.page-id-3435, body.home) .wp-block-latest-posts,
-:is(body.page-id-8, body.page-id-3435, body.home) .wp-block-query,
-:is(body.page-id-8, body.page-id-3435, body.home) .smb-recent-posts,
-:is(body.page-id-8, body.page-id-3435, body.home) .smb-taxonomy-posts {
+:is(body.page-id-8, body.page-id-13, body.page-id-3435, body.home) .nv-sidebar-wrap,
+:is(body.page-id-8, body.page-id-13, body.page-id-3435, body.home) .widget_archive,
+:is(body.page-id-8, body.page-id-13, body.page-id-3435, body.home) .widget_categories,
+:is(body.page-id-8, body.page-id-13, body.page-id-3435, body.home) .wp-block-archives,
+:is(body.page-id-8, body.page-id-13, body.page-id-3435, body.home) .wp-block-categories,
+:is(body.page-id-8, body.page-id-13, body.page-id-3435, body.home) .wp-block-latest-posts,
+:is(body.page-id-8, body.page-id-13, body.page-id-3435, body.home) .wp-block-query,
+:is(body.page-id-8, body.page-id-13, body.page-id-3435, body.home) .smb-recent-posts,
+:is(body.page-id-8, body.page-id-13, body.page-id-3435, body.home) .smb-taxonomy-posts {
     display: none !important;
 }
 
 /* Expand main column when right sidebar is hidden on top page. */
-:is(body.page-id-8, body.page-id-3435, body.home) .neve-main > .container .row,
-:is(body.page-id-8, body.page-id-3435, body.home) .neve-main > .container {
+:is(body.page-id-8, body.page-id-13, body.page-id-3435, body.home) .neve-main > .container .row,
+:is(body.page-id-8, body.page-id-13, body.page-id-3435, body.home) .neve-main > .container {
     display: block !important;
 }
 
-:is(body.page-id-8, body.page-id-3435, body.home) .nv-single-page-wrap,
-:is(body.page-id-8, body.page-id-3435, body.home) .nv-page-content-wrap,
-:is(body.page-id-8, body.page-id-3435, body.home) .nv-page-content,
-:is(body.page-id-8, body.page-id-3435, body.home) .col {
+:is(body.page-id-8, body.page-id-13, body.page-id-3435, body.home) .nv-single-page-wrap,
+:is(body.page-id-8, body.page-id-13, body.page-id-3435, body.home) .nv-page-content-wrap,
+:is(body.page-id-8, body.page-id-13, body.page-id-3435, body.home) .nv-page-content,
+:is(body.page-id-8, body.page-id-13, body.page-id-3435, body.home) .col {
     width: 100% !important;
     max-width: 100% !important;
     flex: 0 0 100% !important;
+}
+
+/* =========================
+   Profile page styles (page-id-13)
+========================= */
+body.page-id-13 {
+    color: #17324a;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 18%, #f5f8fb 100%);
+}
+
+body.page-id-13 p {
+    margin-bottom: revert !important;
+    line-height: 1.8;
+}
+
+body.page-id-13 .nv-content-wrap {
+    padding-bottom: 72px;
+}
+
+body.page-id-13 .smb-section {
+    padding: 36px 0;
+}
+
+body.page-id-13 .smb-section__subtitle {
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: #b98510;
+}
+
+body.page-id-13 .smb-section__title {
+    margin: 0 0 20px;
+    font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+    color: #083158;
+    padding-left: 12px;
+    border-left: 4px solid #f6b21a;
+}
+
+body.page-id-13 .smb-section:not(.smb-section-with-bgimage) .smb-section__contents-wrapper {
+    background: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
+    border: 1px solid #dadfe6;
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 14px 28px rgba(16, 28, 44, 0.08);
+}
+
+body.page-id-13 .smb-section-with-bgimage {
+    margin-top: 8px;
+}
+
+body.page-id-13 .smb-section-with-bgimage .smb-section__inner {
+    min-height: 60vh;
+    display: flex;
+    align-items: flex-end;
+}
+
+body.page-id-13 .smb-section-with-bgimage .smb-section__contents-wrapper {
+    max-width: 720px;
+    margin: 0 0 20px;
+    padding: 28px 32px;
+    border-radius: 24px;
+    background: linear-gradient(110deg, rgba(10, 28, 44, 0.84) 0%, rgba(8, 49, 88, 0.58) 100%);
+    box-shadow: 0 14px 28px rgba(16, 28, 44, 0.18);
+}
+
+body.page-id-13 .smb-section-with-bgimage .smb-section__title {
+    margin: 0;
+    color: #fff;
+    border-left-color: #f6b21a;
+}
+
+body.page-id-13 .smb-section-with-bgimage .smb-section__subtitle {
+    color: #ffe8a6;
+}
+
+body.page-id-13 .smb-information__item {
+    overflow: hidden;
+    margin-bottom: 14px;
+    border: 1px solid #dadfe6;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 6px 16px rgba(12, 28, 44, 0.06);
+}
+
+body.page-id-13 .smb-information__item .c-row {
+    align-items: stretch;
+}
+
+body.page-id-13 .smb-information__item__label {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 18px 20px;
+    background: linear-gradient(135deg, #0f4c81 0%, #083158 100%);
+    color: #fff;
+    font-weight: 800;
+}
+
+body.page-id-13 .smb-information__item__body {
+    padding: 18px 22px;
+}
+
+body.page-id-13 .smb-information__item__body p:last-child {
+    margin-bottom: 0 !important;
+}
+
+body.page-id-13 iframe {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    border: 0;
+    border-radius: 20px;
+    box-shadow: 0 12px 24px rgba(16, 28, 44, 0.12);
+}
+
+body.page-id-13 .wp-block-image img {
+    border-radius: 20px;
+    box-shadow: 0 12px 24px rgba(16, 28, 44, 0.12);
+}
+
+body.page-id-13 .wp-block-button__link {
+    border-radius: 999px;
+    padding: 11px 18px;
+    background: #f6b21a;
+    color: #083158;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+@media (max-width: 900px) {
+    body.page-id-13 .smb-section:not(.smb-section-with-bgimage) .smb-section__contents-wrapper {
+        padding: 24px 18px;
+        border-radius: 18px;
+    }
+
+    body.page-id-13 .smb-section-with-bgimage .smb-section__inner {
+        min-height: 42vh;
+    }
+
+    body.page-id-13 .smb-section-with-bgimage .smb-section__contents-wrapper {
+        padding: 22px 20px;
+        border-radius: 18px;
+    }
+
+    body.page-id-13 .smb-information__item__label,
+    body.page-id-13 .smb-information__item__body {
+        padding: 16px;
+    }
 }
 
 /* =========================
@@ -44,7 +193,7 @@ body.page-id-3337 p {
 }
 
 /* Hide the theme footer on landing pages that already include their own footer content. */
-:is(body.page-id-8, body.page-id-3337, body.page-id-3435, body.home) .site-footer {
+:is(body.page-id-8, body.page-id-13, body.page-id-3337, body.page-id-3435, body.home) .site-footer {
     display: none !important;
 }
 
