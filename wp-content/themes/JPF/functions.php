@@ -12,6 +12,12 @@ function jpf_enqueue_styles() {
 
 add_filter( 'wp_nav_menu_objects', 'jpf_fix_home_menu_links', 10, 2 );
 
+function jpf_is_english_request() {
+    $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+
+    return 0 === strpos( untrailingslashit( $request_uri ) . '/', '/en/' );
+}
+
 function jpf_fix_home_menu_links( $items, $args ) {
     $legacy_url_map = array(
         home_url( '/top/' )     => home_url( '/' ),
@@ -23,6 +29,10 @@ function jpf_fix_home_menu_links( $items, $args ) {
     foreach ( $items as $item ) {
         if ( isset( $legacy_url_map[ $item->url ] ) ) {
             $item->url = $legacy_url_map[ $item->url ];
+        }
+
+        if ( jpf_is_english_request() && home_url( '/slowth/' ) === $item->url ) {
+            $item->title = 'SlowTH (JP)';
         }
     }
 
