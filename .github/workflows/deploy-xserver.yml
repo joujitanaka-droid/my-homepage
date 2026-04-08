@@ -1,0 +1,32 @@
+name: Deploy to Xserver
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy via FTP/FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.XSERVER_FTP_HOST }}
+          username: ${{ secrets.XSERVER_FTP_USERNAME }}
+          password: ${{ secrets.XSERVER_FTP_PASSWORD }}
+          protocol: ${{ vars.XSERVER_FTP_PROTOCOL || 'ftps' }}
+          port: ${{ vars.XSERVER_FTP_PORT || 21 }}
+          server-dir: ${{ vars.XSERVER_SERVER_DIR || '/public_html/' }}
+          exclude: |
+            **/.git*
+            **/.github/**
+            **/node_modules/**
+            **/.vscode/**
+            **/写真/**
+            **/*.mov
+            **/*.MOV
