@@ -79,11 +79,11 @@ function jpf_get_english_menu_order_rank( $item ) {
 
     $order_map = array(
         '/en/'                      => 10,
-        '/en/会社概要-en/'            => 20,
-        '/en/profile-en/'           => 20,
-        '/en/業務内容-en/'            => 30,
-        '/en/content-en/'           => 30,
-        '/en/slowth/'               => 40,
+        '/en/slowth/'               => 20,
+        '/en/会社概要-en/'            => 30,
+        '/en/profile-en/'           => 30,
+        '/en/業務内容-en/'            => 40,
+        '/en/content-en/'           => 40,
         '/en/factory-introduction/' => 50,
         '/en/recruitment-2/'        => 60,
         '/en/お問い合わせ-en/'        => 70,
@@ -100,7 +100,7 @@ function jpf_get_english_menu_order_rank( $item ) {
 
     // 日本語スイッチャー（lang-item-ja）
     if ( is_array( $item->classes ) && in_array( 'lang-item-ja', $item->classes, true ) ) {
-        return 85;
+        return 95;
     }
 
     if ( 'https://jpf.diksoftware.online/view/customer_login' === $item->url ) {
@@ -185,6 +185,14 @@ function jpf_fix_home_menu_links( $items, $args ) {
     }
 
     if ( jpf_is_english_request() ) {
+        // 英語ページでは英語スイッチャーを非表示にし、日本語スイッチャーのみ表示する。
+        foreach ( $items as $index => $item ) {
+            if ( is_array( $item->classes ) && in_array( 'lang-item-en', $item->classes, true ) ) {
+                unset( $items[ $index ] );
+            }
+        }
+        $items = array_values( $items );
+
         usort(
             $items,
             function ( $a, $b ) {

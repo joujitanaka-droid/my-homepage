@@ -31,6 +31,22 @@
         line-height: 1.2;
         padding: 2px 6px;
     }
+
+    html[lang^="en"] #header-grid .header-main-inner .row.row--wrapper {
+        justify-content: flex-start;
+    }
+
+    html[lang^="en"] #header-grid .hfg-slot.right {
+        margin-left: 12px;
+    }
+
+    html[lang^="en"] #header-grid .builder-item--primary-menu .primary-menu-ul {
+        gap: 4px;
+    }
+
+    html[lang^="en"] #header-grid .builder-item--primary-menu .primary-menu-ul > li > .wrap > a {
+        padding: 2px 5px;
+    }
 }
 
 :is(body.page-id-8, body.page-id-13, body.page-id-17, body.page-id-20, body.page-id-23, body.page-id-26, body.page-id-878, body.page-id-1012, body.page-id-1108, body.page-id-1113, body.page-id-1121, body.page-id-3435, body.home) .nv-sidebar-wrap,
@@ -1017,6 +1033,22 @@ body.page-id-3435 .company-links a {
     color: transparent !important;
     text-indent: -9999px;
     white-space: nowrap;
+}
+
+html[lang^="en"] .lang-item-en {
+    display: none !important;
+}
+
+html[lang^="en"] .lang-item-ja a {
+    min-width: 20px;
+    width: 20px;
+    height: 14px;
+    margin: 0 2px !important;
+}
+
+html[lang^="en"] .lang-item-ja a::before {
+    width: 20px;
+    height: 14px;
 }
 
 /* Company signature styling - fix cutoff and improve layout */
