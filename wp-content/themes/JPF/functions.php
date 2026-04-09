@@ -16,6 +16,7 @@ add_filter( 'body_class', 'jpf_add_english_slowth_body_class' );
 add_filter( 'pre_get_document_title', 'jpf_english_slowth_document_title' );
 add_filter( 'redirect_canonical', 'jpf_disable_english_slowth_canonical_redirect', 10, 2 );
 add_filter( 'pll_check_canonical_url', 'jpf_disable_english_slowth_polylang_canonical' );
+add_filter( 'the_content', 'jpf_append_japanese_slowth_test_videos', 20 );
 add_action( 'init', 'jpf_force_redirect_english_top2', 1 );
 add_action( 'template_redirect', 'jpf_force_render_english_home', 0 );
 
@@ -29,6 +30,17 @@ function jpf_is_english_slowth_request() {
     $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
 
     return '/en/slowth/' === untrailingslashit( $request_uri ) . '/';
+}
+
+function jpf_is_japanese_slowth_request() {
+    $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+    $path        = wp_parse_url( $request_uri, PHP_URL_PATH );
+
+    if ( ! is_string( $path ) ) {
+        return false;
+    }
+
+    return '/slowth/' === untrailingslashit( $path ) . '/';
 }
 
 function jpf_is_english_home_request() {
@@ -320,6 +332,40 @@ function jpf_disable_english_slowth_polylang_canonical( $check_canonical ) {
     }
 
     return $check_canonical;
+}
+
+function jpf_append_japanese_slowth_test_videos( $content ) {
+    if ( is_admin() || ! is_main_query() || ! in_the_loop() ) {
+        return $content;
+    }
+
+    if ( ! jpf_is_japanese_slowth_request() || jpf_is_english_slowth_request() ) {
+        return $content;
+    }
+
+    if ( false !== strpos( $content, 'id="video-extra-ja"' ) ) {
+        return $content;
+    }
+
+    $video_section = <<<HTML
+<section id="video-extra-ja" class="section section-alt">
+    <h2>テスト動画（開発中）</h2>
+    <p>開発中の組み立て・調整時のテスト動画です。</p>
+    <div class="video-grid">
+        <div class="video-wrapper">
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/A-43awT59-I" title="SlowTH test video 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/9aWWcD6gM1M" title="SlowTH test video 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/sNJ4ahaqU5M" title="SlowTH test video 3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+</section>
+HTML;
+
+    return $content . $video_section;
 }
 
 add_action( 'template_redirect', 'jpf_redirect_legacy_top_page' );
