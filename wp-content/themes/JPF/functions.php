@@ -64,6 +64,35 @@ function jpf_get_normalized_path( $url ) {
     return untrailingslashit( urldecode( $path ) ) . '/';
 }
 
+function jpf_get_japanese_switch_url_for_english_request() {
+    $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+    $path        = wp_parse_url( $request_uri, PHP_URL_PATH );
+
+    if ( ! is_string( $path ) ) {
+        return home_url( '/' );
+    }
+
+    $normalized_path = untrailingslashit( $path ) . '/';
+    $en_to_jp_map    = array(
+        '/en/'                      => '/',
+        '/en/slowth/'               => '/slowth/',
+        '/en/会社概要-en/'            => '/profile/',
+        '/en/profile-en/'           => '/profile/',
+        '/en/業務内容-en/'            => '/content/',
+        '/en/content-en/'           => '/content/',
+        '/en/factory-introduction/' => '/introduction-2/',
+        '/en/recruitment-2/'        => '/recruitment/',
+        '/en/お問い合わせ-en/'        => '/contact/',
+        '/en/contact-en/'           => '/contact/',
+    );
+
+    if ( isset( $en_to_jp_map[ $normalized_path ] ) ) {
+        return home_url( $en_to_jp_map[ $normalized_path ] );
+    }
+
+    return home_url( '/' );
+}
+
 function jpf_get_slowth_media_urls() {
     $base_url = get_stylesheet_directory_uri() . '/assets/slowth';
 
@@ -197,6 +226,38 @@ function jpf_fix_home_menu_links( $items, $args ) {
     }
 
     if ( jpf_is_english_request() ) {
+        $has_japanese_switcher = false;
+        $fallback_lang_index   = null;
+
+        foreach ( $items as $index => $item ) {
+            if ( ! is_array( $item->classes ) ) {
+                continue;
+            }
+
+            if ( in_array( 'lang-item-ja', $item->classes, true ) ) {
+                $has_japanese_switcher = true;
+                break;
+            }
+
+            if ( in_array( 'lang-item-en', $item->classes, true ) && null === $fallback_lang_index ) {
+                $fallback_lang_index = $index;
+            }
+        }
+
+        // 英語スイッチャーしかない場合は、日本語スイッチャーとして再利用する。
+        if ( ! $has_japanese_switcher && null !== $fallback_lang_index ) {
+            $items[ $fallback_lang_index ]->classes = array_values(
+                array_unique(
+                    array_merge(
+                        array_diff( $items[ $fallback_lang_index ]->classes, array( 'lang-item-en' ) ),
+                        array( 'lang-item', 'lang-item-ja' )
+                    )
+                )
+            );
+            $items[ $fallback_lang_index ]->title   = '日本語';
+            $items[ $fallback_lang_index ]->url     = jpf_get_japanese_switch_url_for_english_request();
+        }
+
         // 英語ページでは英語スイッチャーを非表示にし、日本語スイッチャーのみ表示する。
         foreach ( $items as $index => $item ) {
             if ( is_array( $item->classes ) && in_array( 'lang-item-en', $item->classes, true ) ) {
