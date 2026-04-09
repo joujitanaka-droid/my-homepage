@@ -454,15 +454,20 @@ function jpf_update_japanese_slowth_case2_text( $content ) {
     }
 
     $content = str_replace( '事例2：物流業 B社', '事例2：製造業 B社', $content );
+    // 業務内容テキスト置換（実際のDBコンテンツに合わせて複数パターン対応）
     $content = str_replace(
-        '<strong>業務内容：</strong> 材料入れ替え・架台は単純作業の職人従業員の解放',
-        '<strong>事業内容：</strong> マシニングへの材料取出し投入',
+        '<strong>業務内容：</strong> 複数商品の自動仕分け・ピッキング',
+        '<strong>業務内容：</strong> マシニングへの材料取出し投入',
         $content
     );
-    // 既存テキストパターンも上書き
+    $content = str_replace(
+        '<strong>業務内容：</strong> 材料入れ替え・架台は単純作業の職人従業員の解放',
+        '<strong>業務内容：</strong> マシニングへの材料取出し投入',
+        $content
+    );
     $content = str_replace(
         '<strong>事業内容：</strong> マシニングに材料投入取出し',
-        '<strong>事業内容：</strong> マシニングへの材料取出し投入',
+        '<strong>業務内容：</strong> マシニングへの材料取出し投入',
         $content
     );
     $content = str_replace(
@@ -470,8 +475,13 @@ function jpf_update_japanese_slowth_case2_text( $content ) {
         '<strong>課題：</strong> 職人の時間確保',
         $content
     );
-    // 事例2の写真をテーマアセットの画像に直接URL差し替え
+    // 事例2の写真をテーマアセットの画像に直接URL差し替え（実際のURL: S__31137807.jpg）
     $new_case2_img = get_stylesheet_directory_uri() . '/assets/slowth/case-2.jpg';
+    $content = str_replace(
+        'https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137807.jpg',
+        esc_url( $new_case2_img ),
+        $content
+    );
     $content = str_replace(
         'https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137804.jpg',
         esc_url( $new_case2_img ),
