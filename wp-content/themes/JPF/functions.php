@@ -53,23 +53,23 @@ function jpf_get_normalized_path( $url ) {
 }
 
 function jpf_get_slowth_media_urls() {
-    $version = '20260409';
+    $base_url = get_stylesheet_directory_uri() . '/assets/slowth';
 
     return array(
         'gallery' => array(
-            home_url( '/wp-content/uploads/2026/04/259ea6d7c12c3027c76590707a6b2c40.jpg?v=' . $version ),
-            home_url( '/wp-content/uploads/2026/04/S__31137802.jpg?v=' . $version ),
-            home_url( '/wp-content/uploads/2026/04/S__31137805.jpg?v=' . $version ),
+            $base_url . '/gallery-1.jpg',
+            $base_url . '/gallery-2.jpg',
+            $base_url . '/gallery-3.jpg',
         ),
         'features' => array(
-            home_url( '/wp-content/uploads/2026/04/S__31137803.jpg?v=' . $version ),
-            home_url( '/wp-content/uploads/2026/04/S__31137804.jpg?v=' . $version ),
-            home_url( '/wp-content/uploads/2026/04/S__31137805.jpg?v=' . $version ),
+            $base_url . '/feature-1.jpg',
+            $base_url . '/feature-2.jpg',
+            $base_url . '/gallery-3.jpg',
         ),
-        'process' => home_url( '/wp-content/uploads/2026/04/S__31137800_0.jpg?v=' . $version ),
+        'process' => $base_url . '/process-1.jpg',
         'cases'   => array(
-            home_url( '/wp-content/uploads/2026/04/S__31137806.jpg?v=' . $version ),
-            home_url( '/wp-content/uploads/2026/04/S__31137807.jpg?v=' . $version ),
+            $base_url . '/case-1.jpg',
+            $base_url . '/case-2.jpg',
         ),
     );
 }
