@@ -464,6 +464,13 @@ function jpf_update_japanese_slowth_case2_text( $content ) {
         '<strong>課題：</strong> 職人の時間確保',
         $content
     );
+    // 事例2の写真をテーマアセットの新しい画像に差し替え
+    $new_case2_img = get_stylesheet_directory_uri() . '/assets/slowth/case-2.jpg';
+    $content = preg_replace(
+        '/(<img[^>]+alt="製造業導入事例"[^>]*>)(\s*<h3>事例2)/s',
+        '<img decoding="async" src="' . esc_url( $new_case2_img ) . '" alt="製造業導入事例" class="case-image">$2',
+        $content
+    );
 
     return $content;
 }
