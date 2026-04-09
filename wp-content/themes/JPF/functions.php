@@ -17,7 +17,7 @@ add_filter( 'pre_get_document_title', 'jpf_english_slowth_document_title' );
 add_filter( 'redirect_canonical', 'jpf_disable_english_slowth_canonical_redirect', 10, 2 );
 add_filter( 'pll_check_canonical_url', 'jpf_disable_english_slowth_polylang_canonical' );
 add_filter( 'the_content', 'jpf_append_japanese_slowth_test_videos', 20 );
-add_filter( 'the_content', 'jpf_replace_japanese_top_hero_text', 25 );
+add_filter( 'the_content', 'jpf_replace_japanese_content_hero_text', 25 );
 add_action( 'init', 'jpf_force_redirect_english_top2', 1 );
 add_action( 'template_redirect', 'jpf_force_render_english_home', 0 );
 
@@ -55,7 +55,7 @@ function jpf_is_english_home_request() {
     return '/en/' === untrailingslashit( $path ) . '/';
 }
 
-function jpf_is_japanese_home_request() {
+function jpf_is_japanese_content_request() {
     $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
     $path        = wp_parse_url( $request_uri, PHP_URL_PATH );
 
@@ -65,7 +65,7 @@ function jpf_is_japanese_home_request() {
 
     $normalized_path = untrailingslashit( $path ) . '/';
 
-    return '/' === $normalized_path || '/top/' === $normalized_path || '/tophurui/' === $normalized_path;
+    return '/content/' === $normalized_path;
 }
 
 function jpf_get_normalized_path( $url ) {
@@ -443,12 +443,12 @@ HTML;
     return $content . $video_section;
 }
 
-function jpf_replace_japanese_top_hero_text( $content ) {
+function jpf_replace_japanese_content_hero_text( $content ) {
     if ( is_admin() || ! is_main_query() || ! in_the_loop() ) {
         return $content;
     }
 
-    if ( ! jpf_is_japanese_home_request() ) {
+    if ( ! jpf_is_japanese_content_request() ) {
         return $content;
     }
 
