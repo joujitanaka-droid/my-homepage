@@ -32,19 +32,19 @@
         padding: 2px 6px;
     }
 
-    html[lang^="en"] #header-grid .header-main-inner .row.row--wrapper {
+    :is(html[lang^="en"], body.jpf-slowth-en, body.jpf-top-en) #header-grid .header-main-inner .row.row--wrapper {
         justify-content: flex-start;
     }
 
-    html[lang^="en"] #header-grid .hfg-slot.right {
+    :is(html[lang^="en"], body.jpf-slowth-en, body.jpf-top-en) #header-grid .hfg-slot.right {
         margin-left: 12px;
     }
 
-    html[lang^="en"] #header-grid .builder-item--primary-menu .primary-menu-ul {
+    :is(html[lang^="en"], body.jpf-slowth-en, body.jpf-top-en) #header-grid .builder-item--primary-menu .primary-menu-ul {
         gap: 4px;
     }
 
-    html[lang^="en"] #header-grid .builder-item--primary-menu .primary-menu-ul > li > .wrap > a {
+    :is(html[lang^="en"], body.jpf-slowth-en, body.jpf-top-en) #header-grid .builder-item--primary-menu .primary-menu-ul > li > .wrap > a {
         padding: 2px 5px;
     }
 }
@@ -1035,18 +1035,18 @@ body.page-id-3435 .company-links a {
     white-space: nowrap;
 }
 
-html[lang^="en"] .lang-item-en {
+:is(html[lang^="en"], body.jpf-slowth-en, body.jpf-top-en) .lang-item-en {
     display: none !important;
 }
 
-html[lang^="en"] .lang-item-ja a {
+:is(html[lang^="en"], body.jpf-slowth-en, body.jpf-top-en) .lang-item-ja a {
     min-width: 20px;
     width: 20px;
     height: 14px;
     margin: 0 2px !important;
 }
 
-html[lang^="en"] .lang-item-ja a::before {
+:is(html[lang^="en"], body.jpf-slowth-en, body.jpf-top-en) .lang-item-ja a::before {
     width: 20px;
     height: 14px;
 }
