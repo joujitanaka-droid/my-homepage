@@ -1,6 +1,8 @@
 <?php
 
 get_header();
+
+$slowth_media = jpf_get_slowth_media_urls();
 ?>
 <main id="content" class="neve-main">
     <div class="container single-page-container">
@@ -23,13 +25,13 @@ get_header();
                         <p>These are actual installation photos of SlowTH in operation. Please review the real-world setup image and operating examples.</p>
                         <div class="gallery-grid">
                             <div class="gallery-item">
-                                <img decoding="async" src="https://jp-factory.co.jp/wp-content/uploads/2026/04/259ea6d7c12c3027c76590707a6b2c40.jpg" alt="SlowTH machine photo 1" class="gallery-image">
+                                <img decoding="async" src="<?php echo esc_url( $slowth_media['gallery'][0] ); ?>" alt="SlowTH machine photo 1" class="gallery-image">
                             </div>
                             <div class="gallery-item">
-                                <img decoding="async" src="https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137802.jpg" alt="SlowTH machine photo 2" class="gallery-image">
+                                <img decoding="async" src="<?php echo esc_url( $slowth_media['gallery'][1] ); ?>" alt="SlowTH machine photo 2" class="gallery-image">
                             </div>
                             <div class="gallery-item">
-                                <img decoding="async" src="https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137805.jpg" alt="SlowTH machine photo 3" class="gallery-image">
+                                <img decoding="async" src="<?php echo esc_url( $slowth_media['gallery'][2] ); ?>" alt="SlowTH machine photo 3" class="gallery-image">
                             </div>
                         </div>
                     </section>
@@ -53,17 +55,17 @@ get_header();
                             <div class="feature-item">
                                 <h3>&#x1f527; No integration with existing equipment required</h3>
                                 <p>Complex linkage with an existing production system is not necessary. SlowTH works as a standalone solution, making installation simple and stable.</p>
-                                <img decoding="async" src="https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137803.jpg" alt="Standalone operation image" class="feature-image">
+                                <img decoding="async" src="<?php echo esc_url( $slowth_media['features'][0] ); ?>" alt="Standalone operation image" class="feature-image">
                             </div>
                             <div class="feature-item">
                                 <h3>&#x26a1; Setup in about 3 minutes</h3>
                                 <p>Operators can complete setup from a tablet in only a few minutes. No advanced technical knowledge is required.</p>
-                                <img decoding="async" src="https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137804.jpg" alt="Quick setup image" class="feature-image">
+                                <img decoding="async" src="<?php echo esc_url( $slowth_media['features'][1] ); ?>" alt="Quick setup image" class="feature-image">
                             </div>
                             <div class="feature-item">
                                 <h3>&#x1f465; Supports labor shortage countermeasures</h3>
                                 <p>By automating simple and repetitive work, SlowTH allows valuable human resources to focus on higher-value tasks.</p>
-                                <img decoding="async" src="https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137805.jpg" alt="Labor shortage support image" class="feature-image">
+                                <img decoding="async" src="<?php echo esc_url( $slowth_media['features'][2] ); ?>" alt="Labor shortage support image" class="feature-image">
                             </div>
                         </div>
                     </section>
@@ -116,7 +118,7 @@ get_header();
                                 </div>
                             </div>
                             <div class="process-image">
-                                <img decoding="async" src="https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137800_0.jpg" alt="AI processing flow" class="process-screenshot">
+                                <img decoding="async" src="<?php echo esc_url( $slowth_media['process'] ); ?>" alt="AI processing flow" class="process-screenshot">
                             </div>
                         </div>
                     </section>
@@ -137,7 +139,7 @@ get_header();
                         <h2>Use Cases</h2>
                         <div class="cases-container">
                             <div class="case-item">
-                                <img decoding="async" src="https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137806.jpg" alt="Manufacturing case study" class="case-image">
+                                <img decoding="async" src="<?php echo esc_url( $slowth_media['cases'][0] ); ?>" alt="Manufacturing case study" class="case-image">
                                 <h3>Case 1: Manufacturer A</h3>
                                 <p><strong>Task:</strong> Inspection, sorting and alignment of multiple part types</p>
                                 <p><strong>Challenge:</strong> Skilled workers were fixed to visually demanding sorting work</p>
@@ -151,7 +153,7 @@ get_header();
                                 </ul>
                             </div>
                             <div class="case-item">
-                                <img decoding="async" src="https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137807.jpg" alt="Logistics case study" class="case-image">
+                                <img decoding="async" src="<?php echo esc_url( $slowth_media['cases'][1] ); ?>" alt="Logistics case study" class="case-image">
                                 <h3>Case 2: Logistics Company B</h3>
                                 <p><strong>Task:</strong> Automatic sorting and picking of multiple product types</p>
                                 <p><strong>Challenge:</strong> Manual sorting caused chronic delivery delays</p>

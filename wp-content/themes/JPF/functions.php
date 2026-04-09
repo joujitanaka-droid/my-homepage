@@ -52,6 +52,28 @@ function jpf_get_normalized_path( $url ) {
     return untrailingslashit( urldecode( $path ) ) . '/';
 }
 
+function jpf_get_slowth_media_urls() {
+    $version = '20260409';
+
+    return array(
+        'gallery' => array(
+            home_url( '/wp-content/uploads/2026/04/259ea6d7c12c3027c76590707a6b2c40.jpg?v=' . $version ),
+            home_url( '/wp-content/uploads/2026/04/S__31137802.jpg?v=' . $version ),
+            home_url( '/wp-content/uploads/2026/04/S__31137805.jpg?v=' . $version ),
+        ),
+        'features' => array(
+            home_url( '/wp-content/uploads/2026/04/S__31137803.jpg?v=' . $version ),
+            home_url( '/wp-content/uploads/2026/04/S__31137804.jpg?v=' . $version ),
+            home_url( '/wp-content/uploads/2026/04/S__31137805.jpg?v=' . $version ),
+        ),
+        'process' => home_url( '/wp-content/uploads/2026/04/S__31137800_0.jpg?v=' . $version ),
+        'cases'   => array(
+            home_url( '/wp-content/uploads/2026/04/S__31137806.jpg?v=' . $version ),
+            home_url( '/wp-content/uploads/2026/04/S__31137807.jpg?v=' . $version ),
+        ),
+    );
+}
+
 function jpf_get_english_menu_order_rank( $item ) {
     $normalized_path = jpf_get_normalized_path( $item->url );
 
