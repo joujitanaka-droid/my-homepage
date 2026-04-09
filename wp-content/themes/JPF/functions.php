@@ -17,6 +17,7 @@ add_filter( 'pre_get_document_title', 'jpf_english_slowth_document_title' );
 add_filter( 'redirect_canonical', 'jpf_disable_english_slowth_canonical_redirect', 10, 2 );
 add_filter( 'pll_check_canonical_url', 'jpf_disable_english_slowth_polylang_canonical' );
 add_filter( 'the_content', 'jpf_append_japanese_slowth_test_videos', 20 );
+add_filter( 'the_content', 'jpf_update_japanese_slowth_case2_text', 22 );
 add_filter( 'the_content', 'jpf_replace_japanese_content_hero_text', 25 );
 add_action( 'init', 'jpf_force_redirect_english_top2', 1 );
 add_action( 'template_redirect', 'jpf_force_render_english_home', 0 );
@@ -441,6 +442,30 @@ function jpf_append_japanese_slowth_test_videos( $content ) {
 HTML;
 
     return $content . $video_section;
+}
+
+function jpf_update_japanese_slowth_case2_text( $content ) {
+    if ( is_admin() || ! is_main_query() || ! in_the_loop() ) {
+        return $content;
+    }
+
+    if ( ! jpf_is_japanese_slowth_request() || jpf_is_english_slowth_request() ) {
+        return $content;
+    }
+
+    $content = str_replace( '事例2：物流業 B社', '事例2：製造業 B社', $content );
+    $content = str_replace(
+        '<strong>業務内容：</strong> 材料入れ替え・架台は単純作業の職人従業員の解放',
+        '<strong>事業内容：</strong> マシニングに材料投入取出し',
+        $content
+    );
+    $content = str_replace(
+        '<strong>課題：</strong> 手動の仕分け処理で配送遅延が常態化',
+        '<strong>課題：</strong> 職人の時間確保',
+        $content
+    );
+
+    return $content;
 }
 
 function jpf_replace_japanese_content_hero_text( $content ) {
