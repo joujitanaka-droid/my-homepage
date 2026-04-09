@@ -619,6 +619,19 @@ body.page-id-3337 .feature-image {
     margin-top: 12px;
 }
 
+/* Keep all feature photos the same size in the SlowTH feature cards. */
+body.page-id-3337 #features .feature-item {
+    display: flex;
+    flex-direction: column;
+}
+
+body.page-id-3337 #features .feature-image {
+    height: 220px !important;
+    object-fit: cover;
+    object-position: center;
+    margin-top: auto;
+}
+
 body.page-id-3337 .case-image {
     border-radius: 8px;
     margin-bottom: 12px;
