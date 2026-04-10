@@ -438,6 +438,13 @@ function jpf_append_japanese_slowth_test_videos( $content ) {
         $content = str_replace( $existing_video_2, $existing_video_2 . "\n" . $new_video_3, $content );
     }
 
+    if ( false === strpos( $content, 'HLrjQKxSLCc' ) ) {
+        $existing_test_video_4 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/AIvJ21tAozk" title="SlowTH test video 4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+        $new_test_video_5      = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/HLrjQKxSLCc" title="SlowTH test video 5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = str_replace( $existing_test_video_4, $existing_test_video_4 . "\n" . $new_test_video_5, $content );
+    }
+
     if ( false !== strpos( $content, 'id="video-extra-ja"' ) ) {
         return $content;
     }
@@ -458,6 +465,9 @@ function jpf_append_japanese_slowth_test_videos( $content ) {
         </div>
         <div class="video-wrapper">
             <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/AIvJ21tAozk" title="SlowTH test video 4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/HLrjQKxSLCc" title="SlowTH test video 5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </div>
 </section>
