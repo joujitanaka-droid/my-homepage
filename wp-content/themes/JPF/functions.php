@@ -524,11 +524,13 @@ function jpf_replace_japanese_home_management_text( $content ) {
         return $content;
     }
 
-    return str_replace(
+    $content = str_replace(
         '特別な技術で、豊かな未来を創る',
         '私たちは特別な技術で人が豊かでいられる未来を創ります',
         $content
     );
+
+    return str_replace( '挑戦の積み重ね', '挑戦の精神', $content );
 }
 
 add_action( 'template_redirect', 'jpf_redirect_legacy_top_page' );
