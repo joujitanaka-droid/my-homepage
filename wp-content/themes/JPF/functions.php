@@ -553,6 +553,20 @@ function jpf_update_japanese_slowth_case2_text( $content ) {
         $content
     );
 
+    // 属性順の違いに備えたフォールバック
+    $content = preg_replace(
+        '~(<img[^>]*?)src="https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137803\.jpg"([^>]*alt="既設設備との通信不要のイメージ"[^>]*class="feature-image"[^>]*>)~',
+        '$1src="' . esc_url( $feature_left_img ) . '"$2',
+        $content,
+        1
+    );
+    $content = preg_replace(
+        '~(<img[^>]*?)src="https://jp-factory.co.jp/wp-content/themes/JPF/assets/slowth/case-2\.jpg"([^>]*alt="3分セットアップのイメージ"[^>]*class="feature-image"[^>]*>)~',
+        '$1src="' . esc_url( $feature_center_img ) . '"$2',
+        $content,
+        1
+    );
+
     return $content;
 }
 
