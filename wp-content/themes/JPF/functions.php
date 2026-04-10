@@ -538,6 +538,21 @@ function jpf_update_japanese_slowth_case2_text( $content ) {
         $content
     );
 
+    // スロース特徴カードの左・中央画像を指定画像へ差し替え
+    $feature_left_img   = get_stylesheet_directory_uri() . '/assets/slowth/feature-left-gamen1.png';
+    $feature_center_img = get_stylesheet_directory_uri() . '/assets/slowth/feature-center-cap.jpg';
+
+    $content = str_replace(
+        'src="https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137803.jpg" alt="既設設備との通信不要のイメージ" class="feature-image"',
+        'src="' . esc_url( $feature_left_img ) . '" alt="既設設備との通信不要のイメージ" class="feature-image"',
+        $content
+    );
+    $content = str_replace(
+        'src="https://jp-factory.co.jp/wp-content/themes/JPF/assets/slowth/case-2.jpg" alt="3分セットアップのイメージ" class="feature-image"',
+        'src="' . esc_url( $feature_center_img ) . '" alt="3分セットアップのイメージ" class="feature-image"',
+        $content
+    );
+
     return $content;
 }
 
