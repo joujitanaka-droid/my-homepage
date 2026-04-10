@@ -431,6 +431,13 @@ function jpf_append_japanese_slowth_test_videos( $content ) {
         return $content;
     }
 
+    if ( false === strpos( $content, 'IcIDjk-MbUY' ) ) {
+        $existing_video_2 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/wZYY9ClGzKc" title="スロース動作動画 5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+        $new_video_3      = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/IcIDjk-MbUY" title="スロース動作動画 6" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = str_replace( $existing_video_2, $existing_video_2 . "\n" . $new_video_3, $content );
+    }
+
     if ( false !== strpos( $content, 'id="video-extra-ja"' ) ) {
         return $content;
     }
