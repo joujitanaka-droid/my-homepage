@@ -19,7 +19,7 @@ add_filter( 'pll_check_canonical_url', 'jpf_disable_english_slowth_polylang_cano
 add_filter( 'the_content', 'jpf_append_japanese_slowth_test_videos', 20 );
 add_filter( 'the_content', 'jpf_update_japanese_slowth_case2_text', 22 );
 add_filter( 'the_content', 'jpf_replace_japanese_content_hero_text', 25 );
-add_filter( 'the_content', 'jpf_replace_japanese_home_management_text', 26 );
+add_filter( 'the_content', 'jpf_replace_japanese_home_management_text', 9999 );
 add_action( 'init', 'jpf_force_redirect_english_top2', 1 );
 add_action( 'template_redirect', 'jpf_force_render_english_home', 0 );
 
