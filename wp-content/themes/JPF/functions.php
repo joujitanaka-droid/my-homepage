@@ -444,7 +444,7 @@ function jpf_append_japanese_slowth_test_videos( $content ) {
 
     $video_section = <<<HTML
 <section id="video-extra-ja" class="section section-alt">
-    <h2>テスト動画（開発中）</h2>
+    <h2>番外編「テスト開発中」</h2>
     <p>開発中の組み立て・調整時のテスト動画です。</p>
     <div class="video-grid">
         <div class="video-wrapper">
@@ -455,6 +455,9 @@ function jpf_append_japanese_slowth_test_videos( $content ) {
         </div>
         <div class="video-wrapper">
             <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/sNJ4ahaqU5M" title="SlowTH test video 3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/AIvJ21tAozk" title="SlowTH test video 4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </div>
 </section>
