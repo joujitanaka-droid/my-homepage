@@ -459,12 +459,20 @@ function jpf_append_japanese_slowth_test_videos( $content ) {
     if ( false === strpos( $content, 'VqPr4ZMFhcs' ) ) {
         $new_video_6 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/VqPr4ZMFhcs" title="スロース動作動画 9" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
 
-        $content = preg_replace(
-            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/ZRmHYVl0xQU"[^>]*></iframe></div>)~',
-            "$1\n" . $new_video_6,
-            $content,
-            1
-        );
+        // ZRmHYVl0xQU の直後に挿入（str_replace で確実に）
+        $anchor_video_6 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/ZRmHYVl0xQU" title="スロース動作動画 8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+        if ( false !== strpos( $content, 'ZRmHYVl0xQU' ) ) {
+            $content = str_replace( $anchor_video_6, $anchor_video_6 . "\n" . $new_video_6, $content );
+        }
+
+        // フォールバック: strpos で ZRmHYVl0xQU の </div> を直接探して挿入
+        if ( false === strpos( $content, 'VqPr4ZMFhcs' ) && false !== strpos( $content, 'ZRmHYVl0xQU' ) ) {
+            $pos = strpos( $content, 'ZRmHYVl0xQU' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_6 . substr( $content, $pos + 6 );
+            }
+        }
     }
 
     if ( false === strpos( $content, 'HLrjQKxSLCc' ) ) {
