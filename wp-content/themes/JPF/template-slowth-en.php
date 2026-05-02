@@ -44,7 +44,22 @@ $slowth_media = jpf_get_slowth_media_urls();
                                 <iframe width="100%" height="315" src="https://www.youtube.com/embed/DPyeEMgBjm8" title="SlowTH demo video 4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>
                             <div class="video-wrapper">
-                                <iframe width="100%" height="315" src="https://www.youtube.com/embed/wZYY9ClGzKc" title="SlowTH demo video 5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/wZYY9ClGzKc" title="SlowTH demo video 5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="video-wrapper">
+                                <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/IcIDjk-MbUY" title="SlowTH demo video 6" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="video-wrapper">
+                                <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/tr5EP9SzHzc" title="SlowTH demo video 7" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="video-wrapper">
+                                <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/ZRmHYVl0xQU" title="SlowTH demo video 8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="video-wrapper">
+                                <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/VqPr4ZMFhcs" title="SlowTH demo video 9" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="video-wrapper">
+                                <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/HHPMZBQW7zQ" title="SlowTH demo video 10" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>
                         </div>
                     </section>
@@ -217,6 +232,12 @@ $slowth_media = jpf_get_slowth_media_urls();
                             </div>
                             <div class="video-wrapper">
                                 <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/sNJ4ahaqU5M" title="SlowTH test video 3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="video-wrapper">
+                                <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/AIvJ21tAozk" title="SlowTH test video 4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="video-wrapper">
+                                <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/HLrjQKxSLCc" title="SlowTH test video 5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>
                         </div>
                     </section>
