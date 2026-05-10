@@ -239,6 +239,15 @@ $slowth_media = jpf_get_slowth_media_urls();
                             <div class="video-wrapper">
                                 <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/HLrjQKxSLCc" title="SlowTH test video 5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>
+                            <div class="video-wrapper">
+                                <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/F88AGpGvlaA" title="SlowTH test video 6" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="video-wrapper">
+                                <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/ODDtEVehepc" title="SlowTH test video 7" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="video-wrapper">
+                                <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/zioNn9NBGRw" title="SlowTH test video 8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
                         </div>
                     </section>
                 </div>
