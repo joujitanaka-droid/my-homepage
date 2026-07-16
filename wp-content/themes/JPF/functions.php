@@ -555,6 +555,9 @@ function jpf_append_japanese_slowth_test_videos( $content ) {
         <div class="video-wrapper">
             <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/zioNn9NBGRw" title="SlowTH test video 8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
+        <div class="video-wrapper">
+            <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/v63yNdh49Mc" title="SlowTH test video 9" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
     </div>
 </section>
 HTML;
