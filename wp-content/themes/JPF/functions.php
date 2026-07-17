@@ -17,6 +17,7 @@ add_filter( 'pre_get_document_title', 'jpf_english_slowth_document_title' );
 add_filter( 'redirect_canonical', 'jpf_disable_english_slowth_canonical_redirect', 10, 2 );
 add_filter( 'pll_check_canonical_url', 'jpf_disable_english_slowth_polylang_canonical' );
 add_filter( 'the_content', 'jpf_append_japanese_slowth_test_videos', 20 );
+add_filter( 'the_content', 'jpf_reverse_slowth_video_grids', 21 );
 add_filter( 'the_content', 'jpf_update_japanese_slowth_case2_text', 22 );
 add_filter( 'the_content', 'jpf_replace_japanese_content_hero_text', 25 );
 add_filter( 'the_content', 'jpf_replace_japanese_home_management_text', 9999 );
@@ -563,6 +564,36 @@ function jpf_append_japanese_slowth_test_videos( $content ) {
 HTML;
 
     return $content . $video_section;
+}
+
+/**
+ * 「動画で見るスロース」「番外編『テスト開発中』」の各動画グリッド内の
+ * video-wrapper を新しい順（追加順の逆）に並べ替えて表示する。
+ * 動画の追加は従来通り末尾に追記すればよく、表示順の逆転はここで自動的に行われる。
+ */
+function jpf_reverse_slowth_video_grids( $content ) {
+    if ( is_admin() || ! is_main_query() || ! in_the_loop() ) {
+        return $content;
+    }
+
+    if ( ! jpf_is_japanese_slowth_request() || jpf_is_english_slowth_request() ) {
+        return $content;
+    }
+
+    return preg_replace_callback(
+        '~<div class="video-grid">(.*?)</div>\s*</section>~s',
+        function ( $matches ) {
+            preg_match_all( '~<div class="video-wrapper">.*?</div>~s', $matches[1], $wrapper_matches );
+            $wrappers = $wrapper_matches[0];
+
+            if ( count( $wrappers ) < 2 ) {
+                return $matches[0];
+            }
+
+            return '<div class="video-grid">' . "\n" . implode( "\n", array_reverse( $wrappers ) ) . "\n</div>\n</section>";
+        },
+        $content
+    );
 }
 
 function jpf_update_japanese_slowth_case2_text( $content ) {
