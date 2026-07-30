@@ -643,6 +643,26 @@ function jpf_append_japanese_slowth_test_videos( $content ) {
         $content = str_replace( $existing_test_video_4, $existing_test_video_4 . "\n" . $new_test_video_5, $content );
     }
 
+    if ( false === strpos( $content, 'qxCqem5uy5s' ) ) {
+        $new_test_video_10 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/qxCqem5uy5s" title="SlowTH test video 10" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/v63yNdh49Mc"[^>]*></iframe></div>)~',
+            "$1\n" . $new_test_video_10,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で v63yNdh49Mc の </div> を直接探して挿入
+        if ( false === strpos( $content, 'qxCqem5uy5s' ) && false !== strpos( $content, 'v63yNdh49Mc' ) ) {
+            $pos = strpos( $content, 'v63yNdh49Mc' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_test_video_10 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
     if ( false !== strpos( $content, 'id="video-extra-ja"' ) ) {
         return $content;
     }
