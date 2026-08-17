@@ -636,6 +636,66 @@ function jpf_append_japanese_slowth_test_videos( $content ) {
         }
     }
 
+    if ( false === strpos( $content, 'XlVHmkZ59cw' ) ) {
+        $new_video_18 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/XlVHmkZ59cw" title="スロース動作動画 18" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/awXTHMx8cRk"[^>]*></iframe></div>)~',
+            "$1\n" . $new_video_18,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で awXTHMx8cRk の </div> を直接探して挿入
+        if ( false === strpos( $content, 'XlVHmkZ59cw' ) && false !== strpos( $content, 'awXTHMx8cRk' ) ) {
+            $pos = strpos( $content, 'awXTHMx8cRk' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_18 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
+    if ( false === strpos( $content, 'ZJVlNO1-IMU' ) ) {
+        $new_video_19 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/ZJVlNO1-IMU" title="スロース動作動画 19" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/XlVHmkZ59cw"[^>]*></iframe></div>)~',
+            "$1\n" . $new_video_19,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で XlVHmkZ59cw の </div> を直接探して挿入
+        if ( false === strpos( $content, 'ZJVlNO1-IMU' ) && false !== strpos( $content, 'XlVHmkZ59cw' ) ) {
+            $pos = strpos( $content, 'XlVHmkZ59cw' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_19 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
+    if ( false === strpos( $content, 'G4vjMKLTvcg' ) ) {
+        $new_video_20 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/G4vjMKLTvcg" title="スロース動作動画 20" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/ZJVlNO1-IMU"[^>]*></iframe></div>)~',
+            "$1\n" . $new_video_20,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で ZJVlNO1-IMU の </div> を直接探して挿入
+        if ( false === strpos( $content, 'G4vjMKLTvcg' ) && false !== strpos( $content, 'ZJVlNO1-IMU' ) ) {
+            $pos = strpos( $content, 'ZJVlNO1-IMU' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_20 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
     if ( false === strpos( $content, 'HLrjQKxSLCc' ) ) {
         $existing_test_video_4 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/AIvJ21tAozk" title="SlowTH test video 4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
         $new_test_video_5      = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/HLrjQKxSLCc" title="SlowTH test video 5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
