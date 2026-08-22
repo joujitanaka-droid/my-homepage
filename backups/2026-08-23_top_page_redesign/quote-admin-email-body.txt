@@ -1,0 +1,12 @@
+トップページの見積フォームより、お見積りのご依頼が入りました。
+
+【会社名（個人の場合はお名前）】{company}
+【ご担当者名】{fullname}
+【メールアドレス】{email}
+【電話番号】{tel}
+【ご希望の加工】{process_type}
+【材質】{material}
+【数量】{quantity}
+【希望納期】{delivery}
+【図面データ】{drawing_file}
+【備考・ご要望】{message}
