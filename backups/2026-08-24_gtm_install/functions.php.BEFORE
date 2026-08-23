@@ -132,54 +132,6 @@ function jpf_strip_threading_headers( $headers ) {
     );
 }
 
-/**
- * Google Tag Manager (GTM-PMN2DT6D), site-wide (JP + EN).
- *
- * No GA/GA4/gtag or other GTM container was found anywhere on the site prior
- * to this (checked: rendered HTML, AIOSEO options, theme/plugin code) — this
- * is the only tracking snippet on the site, so there is no duplicate
- * measurement to worry about.
- *
- * Hooked on wp_head (priority 1, so it prints as early as other wp_head
- * callbacks allow) and wp_body_open (called by Neve's header.php, and by
- * both English custom templates via get_header()) — the standard,
- * plugin-free way to install GTM without touching the parent theme. Both
- * hooks fire once per request on every front-end page load, so the snippets
- * are never duplicated. Existing dataLayer.push() calls in
- * assets/top-redesign.js are untouched and keep working: GTM's own snippet
- * initialises window.dataLayer the same way (w[l]=w[l]||[]) before any of
- * our own pushes run, so both cooperate on the same array regardless of
- * load order.
- */
-add_action( 'wp_head', 'jpf_gtm_head_snippet', 1 );
-function jpf_gtm_head_snippet() {
-    if ( is_admin() ) {
-        return;
-    }
-    ?>
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PMN2DT6D');</script>
-<!-- End Google Tag Manager -->
-    <?php
-}
-
-add_action( 'wp_body_open', 'jpf_gtm_body_noscript' );
-function jpf_gtm_body_noscript() {
-    if ( is_admin() ) {
-        return;
-    }
-    ?>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PMN2DT6D"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-    <?php
-}
-
 add_filter( 'wp_nav_menu_objects', 'jpf_fix_home_menu_links', 10, 2 );
 add_filter( 'template_include', 'jpf_use_english_slowth_template', 9999 );
 add_filter( 'body_class', 'jpf_add_english_slowth_body_class' );
