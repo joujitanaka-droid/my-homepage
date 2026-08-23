@@ -1,4 +1,5 @@
 <?php
+// Deploy trigger: 2026-08-23 retry after transient FTP deploy failure (run ce69e134).
 
 add_action( 'wp_enqueue_scripts', 'jpf_enqueue_styles' );
 function jpf_enqueue_styles() {
