@@ -92,46 +92,6 @@ function jpf_fix_cad_filetype_check( $data, $file, $filename, $mimes, $real_mime
     return $data;
 }
 
-/**
- * Snow Monkey Forms mail-tag: {submitted_at}. Resolves to the actual form
- * submission time in JST, for use in administrator-bound email subjects so
- * that Gmail doesn't thread multiple distinct submissions into one
- * conversation (each subject becomes unique per submission).
- */
-add_filter( 'snow_monkey_forms/custom_mail_tag', 'jpf_forms_submitted_at_mail_tag', 10, 2 );
-function jpf_forms_submitted_at_mail_tag( $value, $field_name ) {
-    if ( 'submitted_at' === $field_name ) {
-        return current_time( 'Y/m/d H:i' );
-    }
-
-    return $value;
-}
-
-/**
- * Defensive guard: make sure administrator-bound form emails never carry
- * In-Reply-To / References headers, so separate form submissions are never
- * grouped by mail clients (e.g. Gmail) as replies in the same thread.
- * No code in this theme or the Snow Monkey Forms plugin currently sets these
- * headers, but this strips them unconditionally should anything add them in
- * the future.
- */
-add_filter( 'snow_monkey_forms/administrator_mailer/headers', 'jpf_strip_threading_headers' );
-add_filter( 'snow_monkey_forms/mailer/headers', 'jpf_strip_threading_headers' );
-function jpf_strip_threading_headers( $headers ) {
-    if ( ! is_array( $headers ) ) {
-        return $headers;
-    }
-
-    return array_values(
-        array_filter(
-            $headers,
-            function ( $header ) {
-                return 0 !== stripos( $header, 'In-Reply-To:' ) && 0 !== stripos( $header, 'References:' );
-            }
-        )
-    );
-}
-
 add_filter( 'wp_nav_menu_objects', 'jpf_fix_home_menu_links', 10, 2 );
 add_filter( 'template_include', 'jpf_use_english_slowth_template', 9999 );
 add_filter( 'body_class', 'jpf_add_english_slowth_body_class' );
