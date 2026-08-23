@@ -1,0 +1,16 @@
+トップページの導入相談フォームより、SlowTH導入相談が入りました。
+
+【会社名】{company}
+【ご担当者名】{fullname}
+【メールアドレス】{email}
+【電話番号】{tel}
+【所在地】{location}
+【使用している加工機】{machine}
+【メーカー】{maker}
+【型式】{model}
+【自動化したい作業】{automation_target}
+【夜間運転のご希望】{night_operation}
+【現在の課題】{current_issue}
+【希望時期】{timing}
+【現場・機械の写真】{site_photo}
+【備考・ご要望】{message}
