@@ -808,12 +808,6 @@ function jpf_append_japanese_slowth_test_videos( $content ) {
         return $content;
     }
 
-    // 2026-08-23f: 「番外編『テスト開発中』」セクションはSlowTH販売ページの表示から
-    // 除外(最終CTAを実質的な終点とし、そのままフッターへつなげるため)。
-    // 動画ID・HTML自体は下のヒアドキュメントに残したまま未使用にしているだけで、
-    // functions.php内のデータやYouTube動画そのものは削除していない。
-    return $content;
-
     $video_section = <<<HTML
 <section id="video-extra-ja" class="section section-alt">
     <h2>番外編「テスト開発中」</h2>
