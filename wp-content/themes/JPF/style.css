@@ -1859,8 +1859,7 @@ body.page-id-3435 .reveal.jpf-reveal-in {
     transition: transform .2s ease;
 }
 
-#header-grid .builder-item--primary-menu .primary-menu-ul > li:not(.lang-item) > .wrap > a:hover::after,
-#header-grid .builder-item--primary-menu .primary-menu-ul > li.nv-active:not(.lang-item) > .wrap > a::after {
+#header-grid .builder-item--primary-menu .primary-menu-ul > li:not(.lang-item) > .wrap > a:hover::after {
     transform: scaleX(1);
 }
 
