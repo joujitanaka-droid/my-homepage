@@ -1229,12 +1229,29 @@ body.page-id-3435 .section-cta {
     text-align: center;
 }
 
-/* Problem cards */
+/* Problem cards: fixed column counts (not auto-fit) so 6 cards always
+   align into full rows instead of an uneven 5+1 wrap. */
 body.page-id-3435 .problem-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(1, 1fr);
     gap: 16px;
     margin-top: 8px;
+}
+
+@media (min-width: 640px) {
+    body.page-id-3435 .problem-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    body.page-id-3435 .problem-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+body.page-id-3435 .problem-grid .problem-card {
+    height: 100%;
 }
 
 body.page-id-3435 .problem-card {
