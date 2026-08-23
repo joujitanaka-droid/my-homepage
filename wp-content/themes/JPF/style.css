@@ -1898,19 +1898,16 @@ body.page-id-3435 .reveal.jpf-reveal-in {
     transform: translateY(-2px);
 }
 
-@media (min-width: 901px) {
+/* PC (>=1024px) now has a real CTA button in the header itself
+   (button_base component), so the floating tracker CTA is redundant
+   there and is hidden. Tablet/mobile keep the bottom-fixed bar. */
+@media (min-width: 1024px) {
     .jpf-sticky-quote-cta {
-        top: 14px;
-        right: 18px;
-        background: #f6b21a;
-        color: #083158;
-        padding: 10px 20px;
-        border-radius: 999px;
-        font-size: 0.85rem;
+        display: none;
     }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1023px) {
     .jpf-sticky-quote-cta {
         left: 0;
         right: 0;
