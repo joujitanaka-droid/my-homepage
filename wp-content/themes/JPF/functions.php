@@ -38,6 +38,10 @@ function jpf_render_sticky_quote_cta() {
         return;
     }
 
+    if ( ! apply_filters( 'jpf_show_sticky_quote_cta', true ) ) {
+        return;
+    }
+
     $url = jpf_is_english_request() ? home_url( '/en/' ) . '#quote' : home_url( '/quote/' );
 
     printf(
@@ -1020,6 +1024,71 @@ function jpf_force_redirect_english_top2() {
         wp_safe_redirect( home_url( '/en/' ), 301 );
         exit;
     }
+}
+
+/**
+ * SlowTH (JP) sales page: swap the shared global header for a SlowTH-specific
+ * nav and CTA, without touching the header builder config used by the rest
+ * of the site. Japanese-only — the English SlowTH page keeps using its own
+ * dedicated template-slowth-en.php and is untouched by this.
+ */
+add_filter( 'theme_mod_button_base_text_setting', 'jpf_slowth_header_cta_text' );
+function jpf_slowth_header_cta_text( $value ) {
+    if ( is_page( 'slowth' ) && ! jpf_is_english_request() ) {
+        return '導入相談・デモ依頼';
+    }
+
+    return $value;
+}
+
+add_filter( 'theme_mod_button_base_link_setting', 'jpf_slowth_header_cta_link' );
+function jpf_slowth_header_cta_link( $value ) {
+    if ( is_page( 'slowth' ) && ! jpf_is_english_request() ) {
+        return 'https://jp-factory.co.jp/slowth-contact/';
+    }
+
+    return $value;
+}
+
+add_filter( 'wp_nav_menu_objects', 'jpf_swap_slowth_primary_menu', 20, 2 );
+function jpf_swap_slowth_primary_menu( $items, $args ) {
+    if ( is_admin() ) {
+        return $items;
+    }
+
+    if ( ! is_page( 'slowth' ) || jpf_is_english_request() ) {
+        return $items;
+    }
+
+    if ( empty( $args->theme_location ) || 'primary' !== $args->theme_location ) {
+        return $items;
+    }
+
+    $slowth_menu = wp_get_nav_menu_object( 'SlowTHヘッダーナビ' );
+    if ( ! $slowth_menu ) {
+        return $items;
+    }
+
+    $slowth_items = wp_get_nav_menu_items( $slowth_menu->term_id );
+    if ( ! $slowth_items ) {
+        return $items;
+    }
+
+    return $slowth_items;
+}
+
+/**
+ * Hide the site-wide floating quote CTA on the SlowTH page (it points to the
+ * metal-machining /quote/ flow, which is the wrong CTA here — the SlowTH
+ * header button and in-page CTAs cover this page instead).
+ */
+add_filter( 'jpf_show_sticky_quote_cta', 'jpf_hide_sticky_quote_cta_on_slowth' );
+function jpf_hide_sticky_quote_cta_on_slowth( $show ) {
+    if ( is_page( 'slowth' ) ) {
+        return false;
+    }
+
+    return $show;
 }
 
 function jpf_force_render_english_home() {
