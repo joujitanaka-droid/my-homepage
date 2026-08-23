@@ -1,6 +1,20 @@
 (function () {
     'use strict';
 
+    // Sticky header compact-on-scroll (site-wide).
+    var siteHeader = document.querySelector('.header');
+    if (siteHeader) {
+        var applyScrollState = function () {
+            if (window.scrollY > 40) {
+                siteHeader.classList.add('jpf-scrolled');
+            } else {
+                siteHeader.classList.remove('jpf-scrolled');
+            }
+        };
+        applyScrollState();
+        window.addEventListener('scroll', applyScrollState, { passive: true });
+    }
+
     // Reveal-on-scroll for .reveal sections (progressive enhancement only).
     var revealEls = document.querySelectorAll('.reveal');
     if (revealEls.length) {

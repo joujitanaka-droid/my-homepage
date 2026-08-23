@@ -1127,7 +1127,7 @@ body.page-id-3337 #gallery .gallery-item figcaption {
 
 body.page-id-3435 .hero-machining {
     background:
-        linear-gradient(110deg, rgba(6, 20, 34, 0.88) 0%, rgba(8, 49, 88, 0.66) 55%, rgba(15, 76, 129, 0.4) 100%),
+        linear-gradient(110deg, rgba(6, 20, 34, 0.72) 0%, rgba(8, 49, 88, 0.52) 55%, rgba(15, 76, 129, 0.28) 100%),
         url("https://jp-factory.co.jp/wp-content/uploads/2024/03/buhin_top-1.jpg") center/cover no-repeat;
 }
 
@@ -1786,6 +1786,103 @@ body.page-id-3435 .reveal.jpf-reveal-in {
     body.page-id-3435 .capability-cols {
         grid-template-columns: 1fr;
     }
+}
+
+/* =========================
+   2026-08-23b: Header/footer redesign (sales navigation, site-wide)
+========================= */
+
+/* Sticky header */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 500;
+    background: rgba(255, 255, 255, 0.94);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    transition: box-shadow .2s ease;
+}
+
+.header.jpf-scrolled {
+    box-shadow: 0 2px 12px rgba(8, 49, 88, 0.1);
+}
+
+@media (min-width: 961px) {
+    .header.jpf-scrolled #header-grid .builder-item--logo img {
+        max-height: 40px;
+        transition: max-height .2s ease;
+    }
+
+    #header-grid .builder-item--logo img {
+        transition: max-height .2s ease;
+    }
+}
+
+/* CTA button in header (button_base component) */
+#header-grid .builder-item--button_base {
+    --primarybtnbg: #f6b21a;
+    --primarybtncolor: #083158;
+    --primarybtnhoverbg: #e0a015;
+    --primarybtnhovercolor: #083158;
+    --primarybtnborderradius: 999px;
+}
+
+#header-grid .builder-item--button_base .button {
+    font-weight: 700;
+    white-space: nowrap;
+    padding: 11px 22px;
+    font-size: 14px;
+}
+
+#header-menu-sidebar .builder-item--button_base .button {
+    display: block;
+    text-align: center;
+    padding: 14px 20px;
+    font-size: 15px;
+}
+
+/* Primary nav hover / active state */
+#header-grid .builder-item--primary-menu .primary-menu-ul > li:not(.lang-item) > .wrap > a {
+    position: relative;
+    padding-bottom: 4px;
+}
+
+#header-grid .builder-item--primary-menu .primary-menu-ul > li:not(.lang-item) > .wrap > a::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    bottom: -2px;
+    height: 2px;
+    background: #f6b21a;
+    transform: scaleX(0);
+    transition: transform .2s ease;
+}
+
+#header-grid .builder-item--primary-menu .primary-menu-ul > li:not(.lang-item) > .wrap > a:hover::after,
+#header-grid .builder-item--primary-menu .primary-menu-ul > li.nv-active:not(.lang-item) > .wrap > a::after {
+    transform: scaleX(1);
+}
+
+/* Language switcher: small, unobtrusive */
+#header-grid .builder-item--primary-menu .primary-menu-ul > li.lang-item > .wrap > a,
+#header-menu-sidebar .primary-menu-ul > li.lang-item > .wrap > a {
+    font-size: 12px;
+    opacity: .65;
+    padding: 2px 6px;
+}
+
+/* Footer nav: flat link list, comfortable wrapping */
+.builder-item--footer-menu .primary-menu-ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+}
+
+.builder-item--footer-menu .primary-menu-ul > li.lang-item {
+    margin-left: 12px;
+    opacity: .8;
+    font-size: 0.85em;
 }
 
 /* Site-wide sticky quote CTA (all pages) */
