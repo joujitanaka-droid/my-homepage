@@ -1471,9 +1471,6 @@ body.page-id-3435 .case-card {
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 6px 16px rgba(12, 28, 44, 0.05);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
 }
 
 body.page-id-3435 .case-card img {
@@ -1485,20 +1482,6 @@ body.page-id-3435 .case-card img {
 
 body.page-id-3435 .case-card__body {
     padding: 16px 18px 20px;
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-}
-
-/* One-line "why this method" note, kept visually distinct from the base description. */
-body.page-id-3435 .case-card__point {
-    margin: 10px 0 0;
-    padding-top: 10px;
-    border-top: 1px dashed #dadfe6;
-    font-size: 0.82rem;
-    line-height: 1.5;
-    color: #0f4c81;
-    font-weight: 600;
 }
 
 body.page-id-3435 .case-card__material {
