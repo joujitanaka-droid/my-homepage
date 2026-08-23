@@ -76,8 +76,11 @@
         });
     });
 
-    // Snow Monkey Forms: quote_form_start tracking (unchanged — still wrapped
-    // via pushEvent()/jpf_cta_click, matching the site's other CTA events).
+    // Snow Monkey Forms: quote_form_start / quote_form_submit tracking only.
+    // NOTE: submit-button disabling is intentionally NOT implemented here — Snow Monkey
+    // Forms drives its own input -> confirm -> complete steps through submit events, and a
+    // generic disable-on-submit guard risks blocking the plugin's own step transitions.
+    // Its built-in confirm-page step already requires a deliberate second action before send.
     var smfForms = document.querySelectorAll('.smf-form');
     smfForms.forEach(function (form) {
         var started = false;
@@ -87,54 +90,9 @@
                 pushEvent('quote_form_start');
             }
         });
-    });
 
-    // GA4/GTM completion events: quote_form_submit (/quote/) and
-    // slowth_form_submit (/slowth-contact/).
-    //
-    // Snow Monkey Forms submits via XHR (event.preventDefault() + fetch of
-    // its own REST endpoint — see src/js/module/submit.js), driving an
-    // input -> confirm -> complete flow. The generic DOM "submit" event fires
-    // on every one of those step transitions, so it cannot tell "moved to
-    // confirm" apart from "server confirmed completion" — using it was the
-    // bug that produced no events for GTM's Custom Event triggers (which
-    // matched no fires) or, if it had fired, would have fired at the wrong
-    // step. The plugin instead dispatches its own CustomEvent directly on
-    // the <form> element for each outcome (smf.confirm / smf.complete /
-    // smf.invalid / smf.systemerror); smf.complete only fires once, and only
-    // after the server has actually processed the submission successfully
-    // (systemerror is a separate case), so listening for it — on the form
-    // element itself, not a generic submit — satisfies all of: fires after
-    // real server-side success, never on the input->confirm step, never on
-    // validation errors.
-    //
-    // These two pushes are intentionally top-level custom events
-    // ({ event: 'quote_form_submit' }), not wrapped in pushEvent()'s
-    // jpf_cta_click envelope, because the GA4 Event tags in GTM are wired to
-    // GTM's Custom Event trigger, which matches the literal `event` value —
-    // exactly the mismatch that made both tags fail to fire before. No form
-    // field values (email/name/company/phone/etc.) are included.
-    var smfCompleteEventByFormId = {
-        3473: 'quote_form_submit',
-        3514: 'slowth_form_submit'
-    };
-
-    smfForms.forEach(function (form) {
-        form.addEventListener('smf.complete', function () {
-            if (form.dataset.jpfCompleteTracked === '1') {
-                return;
-            }
-
-            var formIdField = form.querySelector('input[name="snow-monkey-forms-meta[formid]"]');
-            var formId = formIdField ? parseInt(formIdField.value, 10) : null;
-            var eventName = formId ? smfCompleteEventByFormId[formId] : null;
-
-            if (!eventName) {
-                return;
-            }
-
-            form.dataset.jpfCompleteTracked = '1';
-            window.dataLayer.push({ event: eventName });
+        form.addEventListener('submit', function () {
+            pushEvent('quote_form_submit');
         });
     });
 })();

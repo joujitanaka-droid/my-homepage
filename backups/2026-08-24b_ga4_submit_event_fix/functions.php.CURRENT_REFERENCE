@@ -1,0 +1,1153 @@
+<?php
+// Deploy trigger: 2026-08-23 retry after transient FTP deploy failure (run ce69e134).
+
+add_action( 'wp_enqueue_scripts', 'jpf_enqueue_styles' );
+function jpf_enqueue_styles() {
+    wp_enqueue_style(
+        'jpf-child-style',
+        get_stylesheet_uri(),
+        array( 'neve-style' ),
+        filemtime( get_stylesheet_directory() . '/style.css' )
+    );
+}
+
+add_action( 'wp_enqueue_scripts', 'jpf_enqueue_top_redesign_script' );
+function jpf_enqueue_top_redesign_script() {
+    $asset_path = get_stylesheet_directory() . '/assets/top-redesign.js';
+
+    if ( ! file_exists( $asset_path ) ) {
+        return;
+    }
+
+    wp_enqueue_script(
+        'jpf-top-redesign',
+        get_stylesheet_directory_uri() . '/assets/top-redesign.js',
+        array(),
+        filemtime( $asset_path ),
+        true
+    );
+}
+
+add_action( 'wp_footer', 'jpf_render_sticky_quote_cta' );
+function jpf_render_sticky_quote_cta() {
+    if ( is_admin() ) {
+        return;
+    }
+
+    // Avoid showing the floating CTA on the quote page itself.
+    if ( is_page( 'quote' ) ) {
+        return;
+    }
+
+    if ( ! apply_filters( 'jpf_show_sticky_quote_cta', true ) ) {
+        return;
+    }
+
+    $url = jpf_is_english_request() ? home_url( '/en/' ) . '#quote' : home_url( '/quote/' );
+
+    printf(
+        '<a href="%1$s" class="jpf-sticky-quote-cta" data-gtm-event="header_quote_click">%2$s</a>',
+        esc_url( $url ),
+        esc_html( jpf_is_english_request() ? 'Request a Quote' : '図面を送って無料見積' )
+    );
+}
+
+/**
+ * Allow CAD/drawing file uploads (DXF/DWG/STEP/STP/IGES/IGS) through the quote form's
+ * Snow Monkey Forms file control. These extensions are not in WordPress's default
+ * allow-list, so the allowed-mimes list needs to recognise them, otherwise legitimate
+ * drawing files are silently rejected.
+ *
+ * Snow Monkey Forms' own file validator (App/Model/FileUploader::_check_file_type)
+ * additionally compares this declared mime type against PHP finfo's real content
+ * detection, with no filter hook to bypass it. Text-based CAD formats (ASCII DXF,
+ * STEP AP203/214, IGES) are detected by finfo as text/plain, so that is used here to
+ * pass both checks. Binary DXF and DWG are proprietary/less predictable and may still
+ * be rejected by this plugin-level check even though WordPress itself now allows the
+ * extension — PDF/ZIP uploads are unaffected and remain the reliable fallback.
+ */
+add_filter( 'upload_mimes', 'jpf_allow_cad_upload_mimes' );
+function jpf_allow_cad_upload_mimes( $mimes ) {
+    $mimes['dxf']  = 'text/plain';
+    $mimes['dwg']  = 'application/acad';
+    $mimes['step'] = 'text/plain';
+    $mimes['stp']  = 'text/plain';
+    $mimes['igs']  = 'text/plain';
+    $mimes['iges'] = 'text/plain';
+
+    return $mimes;
+}
+
+add_filter( 'wp_check_filetype_and_ext', 'jpf_fix_cad_filetype_check', 10, 5 );
+function jpf_fix_cad_filetype_check( $data, $file, $filename, $mimes, $real_mime ) {
+    $cad_extensions = array( 'dxf', 'dwg', 'step', 'stp', 'igs', 'iges' );
+    $ext            = strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) );
+
+    if ( in_array( $ext, $cad_extensions, true ) && isset( $mimes[ $ext ] ) ) {
+        $data['ext']             = $ext;
+        $data['type']            = $mimes[ $ext ];
+        $data['proper_filename'] = $filename;
+    }
+
+    return $data;
+}
+
+/**
+ * Snow Monkey Forms mail-tag: {submitted_at}. Resolves to the actual form
+ * submission time in JST, for use in administrator-bound email subjects so
+ * that Gmail doesn't thread multiple distinct submissions into one
+ * conversation (each subject becomes unique per submission).
+ */
+add_filter( 'snow_monkey_forms/custom_mail_tag', 'jpf_forms_submitted_at_mail_tag', 10, 2 );
+function jpf_forms_submitted_at_mail_tag( $value, $field_name ) {
+    if ( 'submitted_at' === $field_name ) {
+        return current_time( 'Y/m/d H:i' );
+    }
+
+    return $value;
+}
+
+/**
+ * Defensive guard: make sure administrator-bound form emails never carry
+ * In-Reply-To / References headers, so separate form submissions are never
+ * grouped by mail clients (e.g. Gmail) as replies in the same thread.
+ * No code in this theme or the Snow Monkey Forms plugin currently sets these
+ * headers, but this strips them unconditionally should anything add them in
+ * the future.
+ */
+add_filter( 'snow_monkey_forms/administrator_mailer/headers', 'jpf_strip_threading_headers' );
+add_filter( 'snow_monkey_forms/mailer/headers', 'jpf_strip_threading_headers' );
+function jpf_strip_threading_headers( $headers ) {
+    if ( ! is_array( $headers ) ) {
+        return $headers;
+    }
+
+    return array_values(
+        array_filter(
+            $headers,
+            function ( $header ) {
+                return 0 !== stripos( $header, 'In-Reply-To:' ) && 0 !== stripos( $header, 'References:' );
+            }
+        )
+    );
+}
+
+add_filter( 'wp_nav_menu_objects', 'jpf_fix_home_menu_links', 10, 2 );
+add_filter( 'template_include', 'jpf_use_english_slowth_template', 9999 );
+add_filter( 'body_class', 'jpf_add_english_slowth_body_class' );
+add_filter( 'pre_get_document_title', 'jpf_english_slowth_document_title' );
+add_filter( 'redirect_canonical', 'jpf_disable_english_slowth_canonical_redirect', 10, 2 );
+add_filter( 'pll_check_canonical_url', 'jpf_disable_english_slowth_polylang_canonical' );
+add_filter( 'the_content', 'jpf_append_japanese_slowth_test_videos', 20 );
+add_filter( 'the_content', 'jpf_reverse_slowth_video_grids', 21 );
+add_filter( 'the_content', 'jpf_update_japanese_slowth_case2_text', 22 );
+add_filter( 'the_content', 'jpf_replace_japanese_content_hero_text', 25 );
+add_filter( 'the_content', 'jpf_replace_japanese_home_management_text', 9999 );
+add_action( 'init', 'jpf_force_redirect_english_top2', 1 );
+add_action( 'template_redirect', 'jpf_force_render_english_home', 0 );
+
+function jpf_is_english_request() {
+    $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+
+    return 0 === strpos( untrailingslashit( $request_uri ) . '/', '/en/' );
+}
+
+function jpf_is_english_slowth_request() {
+    $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+
+    return '/en/slowth/' === untrailingslashit( $request_uri ) . '/';
+}
+
+function jpf_is_japanese_slowth_request() {
+    $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+    $path        = wp_parse_url( $request_uri, PHP_URL_PATH );
+
+    if ( ! is_string( $path ) ) {
+        return false;
+    }
+
+    return '/slowth/' === untrailingslashit( $path ) . '/';
+}
+
+function jpf_is_english_home_request() {
+    $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+    $path        = wp_parse_url( $request_uri, PHP_URL_PATH );
+
+    if ( ! is_string( $path ) ) {
+        return false;
+    }
+
+    return '/en/' === untrailingslashit( $path ) . '/';
+}
+
+function jpf_is_japanese_content_request() {
+    $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+    $path        = wp_parse_url( $request_uri, PHP_URL_PATH );
+
+    if ( ! is_string( $path ) ) {
+        return false;
+    }
+
+    $normalized_path = untrailingslashit( $path ) . '/';
+
+    return '/content/' === $normalized_path;
+}
+
+function jpf_is_japanese_home_request() {
+    $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+    $path        = wp_parse_url( $request_uri, PHP_URL_PATH );
+
+    if ( ! is_string( $path ) ) {
+        return false;
+    }
+
+    return '/' === untrailingslashit( $path ) . '/';
+}
+
+function jpf_get_normalized_path( $url ) {
+    $path = wp_parse_url( $url, PHP_URL_PATH );
+
+    if ( ! is_string( $path ) ) {
+        return '';
+    }
+
+    return untrailingslashit( urldecode( $path ) ) . '/';
+}
+
+function jpf_get_japanese_switch_url_for_english_request() {
+    $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+    $path        = wp_parse_url( $request_uri, PHP_URL_PATH );
+
+    if ( ! is_string( $path ) ) {
+        return home_url( '/' );
+    }
+
+    $normalized_path = untrailingslashit( $path ) . '/';
+    $en_to_jp_map    = array(
+        '/en/'                      => '/',
+        '/en/slowth/'               => '/slowth/',
+        '/en/会社概要-en/'            => '/profile/',
+        '/en/profile-en/'           => '/profile/',
+        '/en/業務内容-en/'            => '/content/',
+        '/en/content-en/'           => '/content/',
+        '/en/factory-introduction/' => '/introduction-2/',
+        '/en/recruitment-2/'        => '/recruitment/',
+        '/en/お問い合わせ-en/'        => '/contact/',
+        '/en/contact-en/'           => '/contact/',
+    );
+
+    if ( isset( $en_to_jp_map[ $normalized_path ] ) ) {
+        return home_url( $en_to_jp_map[ $normalized_path ] );
+    }
+
+    return home_url( '/' );
+}
+
+function jpf_get_slowth_media_urls() {
+    $base_url = get_stylesheet_directory_uri() . '/assets/slowth';
+
+    return array(
+        'gallery' => array(
+            $base_url . '/gallery-1.jpg',
+            $base_url . '/gallery-2.jpg',
+            $base_url . '/gallery-3.jpg',
+        ),
+        'features' => array(
+            $base_url . '/feature-1.jpg',
+            $base_url . '/feature-2.jpg',
+            $base_url . '/gallery-3.jpg',
+        ),
+        'process' => $base_url . '/process-1.jpg',
+        'cases'   => array(
+            $base_url . '/case-1.jpg',
+            $base_url . '/case-2.jpg',
+        ),
+    );
+}
+
+function jpf_get_english_menu_order_rank( $item ) {
+    $normalized_path = jpf_get_normalized_path( $item->url );
+
+    $order_map = array(
+        '/en/'                      => 10,
+        '/en/slowth/'               => 20,
+        '/en/会社概要-en/'            => 30,
+        '/en/profile-en/'           => 30,
+        '/en/業務内容-en/'            => 40,
+        '/en/content-en/'           => 40,
+        '/en/factory-introduction/' => 50,
+        '/en/recruitment-2/'        => 60,
+        '/en/お問い合わせ-en/'        => 70,
+        '/en/contact-en/'           => 70,
+    );
+
+    if ( isset( $order_map[ $normalized_path ] ) ) {
+        return $order_map[ $normalized_path ];
+    }
+
+    if ( 'https://jpe.jp-factory.co.jp/' === $item->url ) {
+        return 80;
+    }
+
+    // 日本語スイッチャー（lang-item-ja）
+    if ( is_array( $item->classes ) && in_array( 'lang-item-ja', $item->classes, true ) ) {
+        return 95;
+    }
+
+    if ( 'https://jpf.diksoftware.online/view/customer_login' === $item->url ) {
+        return 90;
+    }
+
+    return 1000;
+}
+
+function jpf_fix_home_menu_links( $items, $args ) {
+    $legacy_url_map = array(
+        home_url( '/top/' )     => home_url( '/' ),
+        home_url( '/?page_id=8' ) => home_url( '/' ),
+        home_url( '/tophurui/' ) => home_url( '/' ),
+        home_url( '/en/top-2/' ) => home_url( '/en/' ),
+    );
+
+    $english_title_map = array(
+        '/en/'                              => 'HOME',
+        '/en/会社概要-en/'                    => 'Profile',
+        '/en/業務内容-en/'                    => 'Content',
+        '/en/slowth/'                       => 'AI Robot',
+        '/en/factory-introduction/'         => 'Factory',
+        '/en/recruitment-2/'                => 'Recruitment',
+        '/en/お問い合わせ-en/'                => 'Contact',
+        '/en/contact-en/'                   => 'Contact',
+        '/slowth/'                          => 'AI Robot',
+        '/contact/'                         => 'Contact',
+        '/recruitment/'                     => 'Recruitment',
+        '/introduction-2/'                  => 'Factory',
+        '/content/'                         => 'Content',
+        '/profile/'                         => 'Profile',
+        '/en/'                              => 'HOME',
+        '/en/slowth/'                       => 'AI Robot',
+    );
+
+    $english_external_title_map = array(
+        'https://jpe.jp-factory.co.jp/'                      => 'JPF Engineering',
+        'https://jpf.diksoftware.online/view/customer_login' => 'Customer Login',
+    );
+
+    $jp_to_en_path_map = array(
+        '/'                => '/en/',
+        '/slowth/'         => '/en/slowth/',
+        '/profile/'        => '/en/会社概要-en/',
+        '/content/'        => '/en/業務内容-en/',
+        '/introduction-2/' => '/en/factory-introduction/',
+        '/recruitment/'    => '/en/recruitment-2/',
+        '/contact/'        => '/en/お問い合わせ-en/',
+    );
+
+    foreach ( $items as $item ) {
+        if ( isset( $legacy_url_map[ $item->url ] ) ) {
+            $item->url = $legacy_url_map[ $item->url ];
+        }
+
+        if ( jpf_is_english_request() ) {
+            $is_lang_item = is_array( $item->classes ) && in_array( 'lang-item', $item->classes, true );
+            $normalized_path = jpf_get_normalized_path( $item->url );
+
+            // 日本語URLを英語URLに変換（内部URLのみ、言語スイッチャーは除外）
+            $item_host = wp_parse_url( $item->url, PHP_URL_HOST );
+            $home_host = wp_parse_url( home_url(), PHP_URL_HOST );
+            if ( ! $is_lang_item && $item_host === $home_host && isset( $jp_to_en_path_map[ $normalized_path ] ) ) {
+                $item->url       = home_url( $jp_to_en_path_map[ $normalized_path ] );
+                $normalized_path = jpf_get_normalized_path( $item->url );
+            }
+
+            if ( isset( $english_title_map[ $normalized_path ] ) ) {
+                $item->title = $english_title_map[ $normalized_path ];
+            }
+
+            if ( isset( $english_external_title_map[ $item->url ] ) ) {
+                $item->title = $english_external_title_map[ $item->url ];
+            }
+
+            // 日本語言語スイッチャーに「日本語」ラベルを付ける
+            if ( $is_lang_item && is_array( $item->classes ) && in_array( 'lang-item-ja', $item->classes, true ) ) {
+                $item->title = '日本語';
+            }
+        }
+    }
+
+    if ( jpf_is_english_request() ) {
+        $has_japanese_switcher = false;
+        $fallback_lang_index   = null;
+
+        foreach ( $items as $index => $item ) {
+            if ( ! is_array( $item->classes ) ) {
+                continue;
+            }
+
+            if ( in_array( 'lang-item-ja', $item->classes, true ) ) {
+                $has_japanese_switcher = true;
+                break;
+            }
+
+            if ( in_array( 'lang-item-en', $item->classes, true ) && null === $fallback_lang_index ) {
+                $fallback_lang_index = $index;
+            }
+        }
+
+        // 英語スイッチャーしかない場合は、日本語スイッチャーとして再利用する。
+        if ( ! $has_japanese_switcher && null !== $fallback_lang_index ) {
+            $items[ $fallback_lang_index ]->classes = array_values(
+                array_unique(
+                    array_merge(
+                        array_diff( $items[ $fallback_lang_index ]->classes, array( 'lang-item-en' ) ),
+                        array( 'lang-item', 'lang-item-ja' )
+                    )
+                )
+            );
+            $items[ $fallback_lang_index ]->title   = '日本語';
+            $items[ $fallback_lang_index ]->url     = jpf_get_japanese_switch_url_for_english_request();
+        }
+
+        // 英語ページでは英語スイッチャーを非表示にし、日本語スイッチャーのみ表示する。
+        foreach ( $items as $index => $item ) {
+            if ( is_array( $item->classes ) && in_array( 'lang-item-en', $item->classes, true ) ) {
+                unset( $items[ $index ] );
+            }
+        }
+        $items = array_values( $items );
+
+        usort(
+            $items,
+            function ( $a, $b ) {
+                $rank_a = jpf_get_english_menu_order_rank( $a );
+                $rank_b = jpf_get_english_menu_order_rank( $b );
+
+                if ( $rank_a === $rank_b ) {
+                    return (int) $a->menu_order <=> (int) $b->menu_order;
+                }
+
+                return $rank_a <=> $rank_b;
+            }
+        );
+
+        // URL正規化（/en/top-2/ → /en/ に統一）
+        foreach ( $items as $item ) {
+            if ( '/en/top-2/' === jpf_get_normalized_path( $item->url ) ) {
+                $item->url = home_url( '/en/' );
+            }
+        }
+
+        // URL重複除去（同一パスのアイテムを1つに絞る、言語スイッチャーは除外）
+        $seen_paths = array();
+        foreach ( $items as $index => $item ) {
+            $is_lang_item = is_array( $item->classes ) && in_array( 'lang-item', $item->classes, true );
+            if ( $is_lang_item ) {
+                continue;
+            }
+            $normalized_path = jpf_get_normalized_path( $item->url );
+            if ( isset( $seen_paths[ $normalized_path ] ) ) {
+                unset( $items[ $index ] );
+            } else {
+                $seen_paths[ $normalized_path ] = true;
+            }
+        }
+
+        $items = array_values( $items );
+    }
+
+    return $items;
+}
+
+function jpf_use_english_slowth_template( $template ) {
+    global $wp_query;
+
+    if ( jpf_is_english_slowth_request() ) {
+        if ( isset( $wp_query ) ) {
+            $wp_query->is_404      = false;
+            $wp_query->is_page     = true;
+            $wp_query->is_singular = true;
+            $wp_query->is_home     = false;
+            $wp_query->is_archive  = false;
+        }
+
+        status_header( 200 );
+
+        return get_stylesheet_directory() . '/template-slowth-en.php';
+    }
+
+    if ( jpf_is_english_home_request() ) {
+        if ( isset( $wp_query ) ) {
+            $wp_query->is_404      = false;
+            $wp_query->is_page     = true;
+            $wp_query->is_singular = true;
+            $wp_query->is_home     = false;
+            $wp_query->is_archive  = false;
+            $wp_query->is_posts_page = false;
+        }
+
+        status_header( 200 );
+
+        return get_stylesheet_directory() . '/template-top-en.php';
+    }
+
+    return $template;
+}
+
+function jpf_add_english_slowth_body_class( $classes ) {
+    if ( jpf_is_english_slowth_request() ) {
+        $classes[] = 'wp-singular';
+        $classes[] = 'page-template-default';
+        $classes[] = 'page';
+        $classes[] = 'page-id-3337';
+        $classes[] = 'jpf-slowth-en';
+    }
+
+    if ( jpf_is_english_home_request() ) {
+        $classes[] = 'home';
+        $classes[] = 'wp-singular';
+        $classes[] = 'page-template-default';
+        $classes[] = 'page';
+        $classes[] = 'page-id-3435';
+        $classes[] = 'jpf-top-en';
+
+        $remove_classes = array( 'blog', 'archive', 'home-blog' );
+        $classes        = array_values( array_diff( $classes, $remove_classes ) );
+    }
+
+    return array_unique( $classes );
+}
+
+function jpf_english_slowth_document_title( $title ) {
+    if ( jpf_is_english_slowth_request() ) {
+        return 'SlowTH - JPF';
+    }
+
+    if ( jpf_is_english_home_request() ) {
+        return 'TOP - JPF';
+    }
+
+    return $title;
+}
+
+function jpf_disable_english_slowth_canonical_redirect( $redirect_url, $requested_url ) {
+    if ( jpf_is_english_slowth_request() ) {
+        return false;
+    }
+
+    return $redirect_url;
+}
+
+function jpf_disable_english_slowth_polylang_canonical( $check_canonical ) {
+    if ( jpf_is_english_slowth_request() ) {
+        return false;
+    }
+
+    return $check_canonical;
+}
+
+function jpf_append_japanese_slowth_test_videos( $content ) {
+    if ( is_admin() || ! is_main_query() || ! in_the_loop() ) {
+        return $content;
+    }
+
+    if ( ! jpf_is_japanese_slowth_request() || jpf_is_english_slowth_request() ) {
+        return $content;
+    }
+
+    if ( false === strpos( $content, 'IcIDjk-MbUY' ) ) {
+        $existing_video_2 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/wZYY9ClGzKc" title="スロース動作動画 5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+        $new_video_3      = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/IcIDjk-MbUY" title="スロース動作動画 6" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = str_replace( $existing_video_2, $existing_video_2 . "\n" . $new_video_3, $content );
+    }
+
+    if ( false === strpos( $content, 'tr5EP9SzHzc' ) ) {
+        $existing_video_3 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/IcIDjk-MbUY" title="スロース動作動画 6" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+        $new_video_4      = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/tr5EP9SzHzc" title="スロース動作動画 7" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = str_replace( $existing_video_3, $existing_video_3 . "\n" . $new_video_4, $content );
+    }
+
+    if ( false === strpos( $content, 'ZRmHYVl0xQU' ) ) {
+        $new_video_5 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/ZRmHYVl0xQU" title="スロース動作動画 8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/tr5EP9SzHzc"[^>]*></iframe></div>)~',
+            "$1\n" . $new_video_5,
+            $content,
+            1
+        );
+    }
+
+    if ( false === strpos( $content, 'VqPr4ZMFhcs' ) ) {
+        $new_video_6 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/VqPr4ZMFhcs" title="スロース動作動画 9" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        // ZRmHYVl0xQU の直後に挿入（str_replace で確実に）
+        $anchor_video_6 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/ZRmHYVl0xQU" title="スロース動作動画 8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+        if ( false !== strpos( $content, 'ZRmHYVl0xQU' ) ) {
+            $content = str_replace( $anchor_video_6, $anchor_video_6 . "\n" . $new_video_6, $content );
+        }
+
+        // フォールバック: strpos で ZRmHYVl0xQU の </div> を直接探して挿入
+        if ( false === strpos( $content, 'VqPr4ZMFhcs' ) && false !== strpos( $content, 'ZRmHYVl0xQU' ) ) {
+            $pos = strpos( $content, 'ZRmHYVl0xQU' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_6 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
+    if ( false === strpos( $content, 'HHPMZBQW7zQ' ) ) {
+        $new_video_10 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/HHPMZBQW7zQ" title="スロース動作動画 10" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/VqPr4ZMFhcs"[^>]*></iframe></div>)~',
+            "$1\n" . $new_video_10,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で VqPr4ZMFhcs の </div> を直接探して挿入
+        if ( false === strpos( $content, 'HHPMZBQW7zQ' ) && false !== strpos( $content, 'VqPr4ZMFhcs' ) ) {
+            $pos = strpos( $content, 'VqPr4ZMFhcs' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_10 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
+    if ( false === strpos( $content, 'bAxqxciuxDg' ) ) {
+        $new_video_11 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/bAxqxciuxDg" title="スロース動作動画 11" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/HHPMZBQW7zQ"[^>]*></iframe></div>)~',
+            "$1\n" . $new_video_11,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で HHPMZBQW7zQ の </div> を直接探して挿入
+        if ( false === strpos( $content, 'bAxqxciuxDg' ) && false !== strpos( $content, 'HHPMZBQW7zQ' ) ) {
+            $pos = strpos( $content, 'HHPMZBQW7zQ' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_11 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
+    if ( false === strpos( $content, 'q3STBqCVUxo' ) ) {
+        $new_video_12 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/q3STBqCVUxo" title="スロース動作動画 12" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/bAxqxciuxDg"[^>]*></iframe></div>)~',
+            "$1\n" . $new_video_12,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で bAxqxciuxDg の </div> を直接探して挿入
+        if ( false === strpos( $content, 'q3STBqCVUxo' ) && false !== strpos( $content, 'bAxqxciuxDg' ) ) {
+            $pos = strpos( $content, 'bAxqxciuxDg' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_12 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
+    if ( false === strpos( $content, 'P1X9X8E7KDE' ) ) {
+        $new_video_13 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/P1X9X8E7KDE" title="スロース動作動画 13" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/q3STBqCVUxo"[^>]*></iframe></div>)~',
+            "$1\n" . $new_video_13,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で q3STBqCVUxo の </div> を直接探して挿入
+        if ( false === strpos( $content, 'P1X9X8E7KDE' ) && false !== strpos( $content, 'q3STBqCVUxo' ) ) {
+            $pos = strpos( $content, 'q3STBqCVUxo' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_13 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
+    if ( false === strpos( $content, 'Kck9lArXq3Q' ) ) {
+        $new_video_14 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/Kck9lArXq3Q" title="スロース動作動画 14" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/P1X9X8E7KDE"[^>]*></iframe></div>)~',
+            "$1\n" . $new_video_14,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で P1X9X8E7KDE の </div> を直接探して挿入
+        if ( false === strpos( $content, 'Kck9lArXq3Q' ) && false !== strpos( $content, 'P1X9X8E7KDE' ) ) {
+            $pos = strpos( $content, 'P1X9X8E7KDE' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_14 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
+    if ( false === strpos( $content, '1xXf5XV03G0' ) ) {
+        $new_video_15 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/1xXf5XV03G0" title="スロース動作動画 15" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/Kck9lArXq3Q"[^>]*></iframe></div>)~',
+            "$1\n" . $new_video_15,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で Kck9lArXq3Q の </div> を直接探して挿入
+        if ( false === strpos( $content, '1xXf5XV03G0' ) && false !== strpos( $content, 'Kck9lArXq3Q' ) ) {
+            $pos = strpos( $content, 'Kck9lArXq3Q' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_15 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
+    if ( false === strpos( $content, 'ZuXrp5W4S9I' ) ) {
+        $new_video_16 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/ZuXrp5W4S9I" title="スロース動作動画 16" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/1xXf5XV03G0"[^>]*></iframe></div>)~',
+            "$1\n" . $new_video_16,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で 1xXf5XV03G0 の </div> を直接探して挿入
+        if ( false === strpos( $content, 'ZuXrp5W4S9I' ) && false !== strpos( $content, '1xXf5XV03G0' ) ) {
+            $pos = strpos( $content, '1xXf5XV03G0' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_16 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
+    if ( false === strpos( $content, 'awXTHMx8cRk' ) ) {
+        $new_video_17 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/awXTHMx8cRk" title="スロース動作動画 17" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/ZuXrp5W4S9I"[^>]*></iframe></div>)~',
+            "$1\n" . $new_video_17,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で ZuXrp5W4S9I の </div> を直接探して挿入
+        if ( false === strpos( $content, 'awXTHMx8cRk' ) && false !== strpos( $content, 'ZuXrp5W4S9I' ) ) {
+            $pos = strpos( $content, 'ZuXrp5W4S9I' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_17 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
+    if ( false === strpos( $content, 'XlVHmkZ59cw' ) ) {
+        $new_video_18 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/XlVHmkZ59cw" title="スロース動作動画 18" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/awXTHMx8cRk"[^>]*></iframe></div>)~',
+            "$1\n" . $new_video_18,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で awXTHMx8cRk の </div> を直接探して挿入
+        if ( false === strpos( $content, 'XlVHmkZ59cw' ) && false !== strpos( $content, 'awXTHMx8cRk' ) ) {
+            $pos = strpos( $content, 'awXTHMx8cRk' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_18 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
+    if ( false === strpos( $content, 'ZJVlNO1-IMU' ) ) {
+        $new_video_19 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/ZJVlNO1-IMU" title="スロース動作動画 19" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/XlVHmkZ59cw"[^>]*></iframe></div>)~',
+            "$1\n" . $new_video_19,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で XlVHmkZ59cw の </div> を直接探して挿入
+        if ( false === strpos( $content, 'ZJVlNO1-IMU' ) && false !== strpos( $content, 'XlVHmkZ59cw' ) ) {
+            $pos = strpos( $content, 'XlVHmkZ59cw' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_19 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
+    if ( false === strpos( $content, 'G4vjMKLTvcg' ) ) {
+        $new_video_20 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/G4vjMKLTvcg" title="スロース動作動画 20" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/ZJVlNO1-IMU"[^>]*></iframe></div>)~',
+            "$1\n" . $new_video_20,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で ZJVlNO1-IMU の </div> を直接探して挿入
+        if ( false === strpos( $content, 'G4vjMKLTvcg' ) && false !== strpos( $content, 'ZJVlNO1-IMU' ) ) {
+            $pos = strpos( $content, 'ZJVlNO1-IMU' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_video_20 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
+    if ( false === strpos( $content, 'HLrjQKxSLCc' ) ) {
+        $existing_test_video_4 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/AIvJ21tAozk" title="SlowTH test video 4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+        $new_test_video_5      = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/HLrjQKxSLCc" title="SlowTH test video 5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = str_replace( $existing_test_video_4, $existing_test_video_4 . "\n" . $new_test_video_5, $content );
+    }
+
+    if ( false === strpos( $content, 'qxCqem5uy5s' ) ) {
+        $new_test_video_10 = '<div class="video-wrapper"><iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/qxCqem5uy5s" title="SlowTH test video 10" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+        $content = preg_replace(
+            '~(<div class="video-wrapper"><iframe[^>]*src="https://www\.youtube\.com/embed/v63yNdh49Mc"[^>]*></iframe></div>)~',
+            "$1\n" . $new_test_video_10,
+            $content,
+            1
+        );
+
+        // フォールバック: strpos で v63yNdh49Mc の </div> を直接探して挿入
+        if ( false === strpos( $content, 'qxCqem5uy5s' ) && false !== strpos( $content, 'v63yNdh49Mc' ) ) {
+            $pos = strpos( $content, 'v63yNdh49Mc' );
+            $pos = strpos( $content, '</div>', $pos );
+            if ( false !== $pos ) {
+                $content = substr( $content, 0, $pos + 6 ) . "\n" . $new_test_video_10 . substr( $content, $pos + 6 );
+            }
+        }
+    }
+
+    if ( false !== strpos( $content, 'id="video-extra-ja"' ) ) {
+        return $content;
+    }
+
+    // 2026-08-23f: 「番外編『テスト開発中』」セクションはSlowTH販売ページの表示から
+    // 除外(最終CTAを実質的な終点とし、そのままフッターへつなげるため)。
+    // 動画ID・HTML自体は下のヒアドキュメントに残したまま未使用にしているだけで、
+    // functions.php内のデータやYouTube動画そのものは削除していない。
+    return $content;
+
+    $video_section = <<<HTML
+<section id="video-extra-ja" class="section section-alt">
+    <h2>番外編「テスト開発中」</h2>
+    <p>開発中の組み立て・調整時のテスト動画です。</p>
+    <div class="video-grid">
+        <div class="video-wrapper">
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/A-43awT59-I" title="SlowTH test video 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/9aWWcD6gM1M" title="SlowTH test video 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/sNJ4ahaqU5M" title="SlowTH test video 3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/AIvJ21tAozk" title="SlowTH test video 4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/HLrjQKxSLCc" title="SlowTH test video 5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/F88AGpGvlaA" title="SlowTH test video 6" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/ODDtEVehepc" title="SlowTH test video 7" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/zioNn9NBGRw" title="SlowTH test video 8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe loading="lazy" width="100%" height="315" src="https://www.youtube.com/embed/v63yNdh49Mc" title="SlowTH test video 9" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+</section>
+HTML;
+
+    return $content . $video_section;
+}
+
+/**
+ * 「動画で見るスロース」「番外編『テスト開発中』」の各動画グリッド内の
+ * video-wrapper を新しい順（追加順の逆）に並べ替えて表示する。
+ * 動画の追加は従来通り末尾に追記すればよく、表示順の逆転はここで自動的に行われる。
+ */
+function jpf_reverse_slowth_video_grids( $content ) {
+    if ( is_admin() || ! is_main_query() || ! in_the_loop() ) {
+        return $content;
+    }
+
+    if ( ! jpf_is_japanese_slowth_request() || jpf_is_english_slowth_request() ) {
+        return $content;
+    }
+
+    return preg_replace_callback(
+        '~<div class="video-grid">(.*?)</div>\s*</section>~s',
+        function ( $matches ) {
+            preg_match_all( '~<div class="video-wrapper">.*?</div>~s', $matches[1], $wrapper_matches );
+            $wrappers = $wrapper_matches[0];
+
+            if ( count( $wrappers ) < 2 ) {
+                return $matches[0];
+            }
+
+            return '<div class="video-grid">' . "\n" . implode( "\n", array_reverse( $wrappers ) ) . "\n</div>\n</section>";
+        },
+        $content
+    );
+}
+
+function jpf_update_japanese_slowth_case2_text( $content ) {
+    if ( is_admin() || ! is_main_query() || ! in_the_loop() ) {
+        return $content;
+    }
+
+    if ( ! jpf_is_japanese_slowth_request() || jpf_is_english_slowth_request() ) {
+        return $content;
+    }
+
+    $content = str_replace( '事例2：物流業 B社', '事例2：製造業 B社', $content );
+    // 業務内容テキスト置換（実際のDBコンテンツに合わせて複数パターン対応）
+    $content = str_replace(
+        '<strong>業務内容：</strong> 複数商品の自動仕分け・ピッキング',
+        '<strong>業務内容：</strong> マシニングへの材料取出し投入',
+        $content
+    );
+    $content = str_replace(
+        '<strong>業務内容：</strong> 材料入れ替え・架台は単純作業の職人従業員の解放',
+        '<strong>業務内容：</strong> マシニングへの材料取出し投入',
+        $content
+    );
+    $content = str_replace(
+        '<strong>事業内容：</strong> マシニングに材料投入取出し',
+        '<strong>業務内容：</strong> マシニングへの材料取出し投入',
+        $content
+    );
+    $content = str_replace(
+        '<strong>課題：</strong> 手動の仕分け処理で配送遅延が常態化',
+        '<strong>課題：</strong> 職人の時間確保',
+        $content
+    );
+    // 事例2の写真をテーマアセットの画像に直接URL差し替え（実際のURL: S__31137807.jpg）
+    $new_case2_img = get_stylesheet_directory_uri() . '/assets/slowth/case-2.jpg';
+    $content = str_replace(
+        'https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137807.jpg',
+        esc_url( $new_case2_img ),
+        $content
+    );
+    $content = str_replace(
+        'https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137804.jpg',
+        esc_url( $new_case2_img ),
+        $content
+    );
+
+    // スロース特徴カードの左・中央画像を指定画像へ差し替え
+    $feature_left_img   = get_stylesheet_directory_uri() . '/assets/slowth/feature-center-cap.jpg';
+    $feature_center_img = get_stylesheet_directory_uri() . '/assets/slowth/feature-left-gamen1.png';
+
+    $content = str_replace(
+        'src="https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137803.jpg" alt="既設設備との通信不要のイメージ" class="feature-image"',
+        'src="' . esc_url( $feature_left_img ) . '" alt="既設設備との通信不要のイメージ" class="feature-image"',
+        $content
+    );
+    $content = str_replace(
+        'src="https://jp-factory.co.jp/wp-content/themes/JPF/assets/slowth/case-2.jpg" alt="3分セットアップのイメージ" class="feature-image"',
+        'src="' . esc_url( $feature_center_img ) . '" alt="3分セットアップのイメージ" class="feature-image"',
+        $content
+    );
+
+    // 属性順の違いに備えたフォールバック
+    $content = preg_replace(
+        '~(<img[^>]*?)src="https://jp-factory.co.jp/wp-content/uploads/2026/04/S__31137803\.jpg"([^>]*alt="既設設備との通信不要のイメージ"[^>]*class="feature-image"[^>]*>)~',
+        '$1src="' . esc_url( $feature_left_img ) . '"$2',
+        $content,
+        1
+    );
+    $content = preg_replace(
+        '~(<img[^>]*?)src="https://jp-factory.co.jp/wp-content/themes/JPF/assets/slowth/case-2\.jpg"([^>]*alt="3分セットアップのイメージ"[^>]*class="feature-image"[^>]*>)~',
+        '$1src="' . esc_url( $feature_center_img ) . '"$2',
+        $content,
+        1
+    );
+
+    return $content;
+}
+
+function jpf_replace_japanese_content_hero_text( $content ) {
+    if ( is_admin() || ! is_main_query() || ! in_the_loop() ) {
+        return $content;
+    }
+
+    if ( ! jpf_is_japanese_content_request() ) {
+        return $content;
+    }
+
+    return str_replace( '金属部品加工', '業務内容', $content );
+}
+
+function jpf_replace_japanese_home_management_text( $content ) {
+    if ( is_admin() || ! is_main_query() || ! in_the_loop() ) {
+        return $content;
+    }
+
+    if ( ! jpf_is_japanese_home_request() || jpf_is_english_request() ) {
+        return $content;
+    }
+
+    $content = str_replace(
+        '特別な技術で、豊かな未来を創る',
+        '私たちは特別な技術で人が豊かでいられる未来を創ります',
+        $content
+    );
+
+    return str_replace( '挑戦の積み重ね', '挑戦の精神', $content );
+}
+
+add_action( 'template_redirect', 'jpf_redirect_legacy_top_page' );
+
+function jpf_redirect_legacy_top_page() {
+    if ( is_admin() || wp_doing_ajax() ) {
+        return;
+    }
+
+    $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+    $page_id = isset( $_GET['page_id'] ) ? sanitize_text_field( wp_unslash( $_GET['page_id'] ) ) : '';
+
+    if (
+        '/top/' === untrailingslashit( $request_uri ) . '/' ||
+        '/tophurui/' === untrailingslashit( $request_uri ) . '/' ||
+        '8' === $page_id
+    ) {
+        wp_safe_redirect( home_url( '/' ), 301 );
+        exit;
+    }
+
+    if ( '/en/top-2/' === untrailingslashit( $request_uri ) . '/' ) {
+        wp_safe_redirect( home_url( '/en/' ), 301 );
+        exit;
+    }
+}
+
+function jpf_force_redirect_english_top2() {
+    if ( is_admin() || wp_doing_ajax() ) {
+        return;
+    }
+
+    $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+    $path        = wp_parse_url( $request_uri, PHP_URL_PATH );
+
+    if ( ! is_string( $path ) ) {
+        return;
+    }
+
+    if ( '/en/top-2/' === untrailingslashit( $path ) . '/' ) {
+        wp_safe_redirect( home_url( '/en/' ), 301 );
+        exit;
+    }
+}
+
+/**
+ * SlowTH (JP) sales page: swap the shared global header for a SlowTH-specific
+ * nav and CTA, without touching the header builder config used by the rest
+ * of the site. Japanese-only — the English SlowTH page keeps using its own
+ * dedicated template-slowth-en.php and is untouched by this.
+ */
+add_filter( 'theme_mod_button_base_text_setting', 'jpf_slowth_header_cta_text' );
+function jpf_slowth_header_cta_text( $value ) {
+    if ( is_page( 'slowth' ) && ! jpf_is_english_request() ) {
+        return '導入相談・デモ依頼';
+    }
+
+    return $value;
+}
+
+add_filter( 'theme_mod_button_base_link_setting', 'jpf_slowth_header_cta_link' );
+function jpf_slowth_header_cta_link( $value ) {
+    if ( is_page( 'slowth' ) && ! jpf_is_english_request() ) {
+        return 'https://jp-factory.co.jp/slowth-contact/';
+    }
+
+    return $value;
+}
+
+add_filter( 'wp_nav_menu_objects', 'jpf_swap_slowth_primary_menu', 20, 2 );
+function jpf_swap_slowth_primary_menu( $items, $args ) {
+    if ( is_admin() ) {
+        return $items;
+    }
+
+    if ( ! is_page( 'slowth' ) || jpf_is_english_request() ) {
+        return $items;
+    }
+
+    if ( empty( $args->theme_location ) || 'primary' !== $args->theme_location ) {
+        return $items;
+    }
+
+    $slowth_menu = wp_get_nav_menu_object( 'SlowTHヘッダーナビ' );
+    if ( ! $slowth_menu ) {
+        return $items;
+    }
+
+    $slowth_items = wp_get_nav_menu_items( $slowth_menu->term_id );
+    if ( ! $slowth_items ) {
+        return $items;
+    }
+
+    return $slowth_items;
+}
+
+/**
+ * Hide the site-wide floating quote CTA on the SlowTH page (it points to the
+ * metal-machining /quote/ flow, which is the wrong CTA here — the SlowTH
+ * header button and in-page CTAs cover this page instead).
+ */
+add_filter( 'jpf_show_sticky_quote_cta', 'jpf_hide_sticky_quote_cta_on_slowth' );
+function jpf_hide_sticky_quote_cta_on_slowth( $show ) {
+    if ( is_page( 'slowth' ) ) {
+        return false;
+    }
+
+    return $show;
+}
+
+function jpf_force_render_english_home() {
+    if ( is_admin() || wp_doing_ajax() ) {
+        return;
+    }
+
+    if ( ! jpf_is_english_home_request() ) {
+        return;
+    }
+
+    status_header( 200 );
+    include get_stylesheet_directory() . '/template-top-en.php';
+    exit;
+}
