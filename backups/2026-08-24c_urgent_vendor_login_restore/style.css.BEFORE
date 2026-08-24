@@ -1905,22 +1905,6 @@ body.page-id-3435 .reveal.jpf-reveal-in {
     padding: 2px 6px;
 }
 
-/* Vendor login: small sub-link, visually separated from the sales nav items
-   with a left divider + extra spacing, grouped with the language switcher
-   as a "secondary" cluster at the right edge of the nav. */
-#header-grid .builder-item--primary-menu .primary-menu-ul > li.jpf-header-sublink > .wrap > a,
-#header-menu-sidebar .primary-menu-ul > li.jpf-header-sublink > .wrap > a {
-    font-size: 12px;
-    opacity: .7;
-    padding: 2px 6px;
-}
-
-#header-grid .builder-item--primary-menu .primary-menu-ul > li.jpf-header-sublink {
-    margin-left: 14px;
-    padding-left: 14px;
-    border-left: 1px solid #dadfe6;
-}
-
 /* Footer nav: flat link list, comfortable wrapping */
 .builder-item--footer-menu .primary-menu-ul {
     display: flex;
