@@ -989,7 +989,7 @@ body.page-id-3435 .cta-band p {
 }
 
 body.page-id-3435 .cta-band p {
-    max-width: 820px;
+    max-width: 640px;
 }
 
 /* SNS */
@@ -1833,7 +1833,7 @@ body.page-id-3435 .slowth-product-name {
 
 /* Final quote CTA (dark) */
 body.page-id-3435 .final-cta {
-    text-align: left;
+    text-align: center;
     border-radius: 20px;
     background: linear-gradient(150deg, #050d16 0%, #0a1a2b 55%, #0f2743 100%);
     color: #fff;
@@ -1847,7 +1847,9 @@ body.page-id-3435 .final-cta p {
 }
 
 body.page-id-3435 .final-cta p:not(.final-cta__lead) {
-    max-width: 820px;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 body.page-id-3435 .final-cta__lead {
@@ -1857,7 +1859,7 @@ body.page-id-3435 .final-cta__lead {
 }
 
 body.page-id-3435 .final-cta .badge-row {
-    justify-content: flex-start;
+    justify-content: center;
     margin-top: 24px;
 }
 
