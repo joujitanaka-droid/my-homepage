@@ -1,4 +1,5 @@
 /* TOP page cleanup: hide sidebar/archive/category and auto post listings. */
+/* Deploy trigger: 2026-08-27 retry after transient FTP deploy failure */
 :root {
     --jpf-header-max-width: min(98vw, 1560px);
 }
