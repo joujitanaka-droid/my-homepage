@@ -705,43 +705,18 @@ body.page-id-3435 p {
 }
 
 body.page-id-3435 .wp-block-post-content {
-    max-width: 1600px;
+    max-width: 1140px;
     margin: 0 auto;
     padding: 24px 20px 72px;
 }
 
-@media (min-width: 1200px) {
-    body.page-id-3435 .wp-block-post-content {
-        padding-left: 25px;
-        padding-right: 25px;
-    }
-}
-
-@media (min-width: 1440px) {
-    body.page-id-3435 .wp-block-post-content {
-        padding-left: 35px;
-        padding-right: 35px;
-    }
-}
-
-@media (min-width: 1920px) {
-    body.page-id-3435 .wp-block-post-content {
-        padding-left: 45px;
-        padding-right: 45px;
-    }
-}
-
-/* Hero: full-bleed edge-to-edge (breaks out of the page's max-width wrapper;
-   inner text keeps its own comfortable measure via .hero-copy's max-width). */
+/* Hero */
 body.page-id-3435 .hero {
     color: #fff;
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-    margin-top: 0;
+    margin-top: 8px;
     min-height: 72vh;
-    border-radius: 0;
-    padding: 56px 20px;
+    border-radius: 24px;
+    padding: 56px 40px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -749,40 +724,6 @@ body.page-id-3435 .hero {
         linear-gradient(110deg, rgba(10, 28, 44, 0.86) 0%, rgba(8, 49, 88, 0.58) 58%, rgba(15, 76, 129, 0.35) 100%),
         url("https://jp-factory.co.jp/wp-content/uploads/2024/03/IMG_0730-1536x1152.jpg") center/cover no-repeat;
     box-shadow: 0 14px 28px rgba(16, 28, 44, 0.12);
-}
-
-@media (min-width: 640px) {
-    body.page-id-3435 .hero {
-        padding-left: 40px;
-        padding-right: 40px;
-    }
-}
-
-@media (min-width: 1200px) {
-    body.page-id-3435 .hero {
-        padding-left: 56px;
-        padding-right: 56px;
-    }
-}
-
-@media (min-width: 1440px) {
-    body.page-id-3435 .hero {
-        padding-left: 72px;
-        padding-right: 72px;
-    }
-}
-
-@media (min-width: 1920px) {
-    body.page-id-3435 .hero {
-        padding-left: 96px;
-        padding-right: 96px;
-    }
-}
-
-/* overflow-x safety net for the 100vw hero breakout above (prevents the
-   vertical-scrollbar-width edge case from introducing horizontal scroll). */
-body.page-id-3435 {
-    overflow-x: hidden;
 }
 
 body.page-id-3435 .hero-kicker {
@@ -982,10 +923,6 @@ body.page-id-3435 .cta-band {
 body.page-id-3435 .cta-band h2,
 body.page-id-3435 .cta-band p {
     color: #fff;
-}
-
-body.page-id-3435 .cta-band p {
-    max-width: 640px;
 }
 
 /* SNS */
@@ -1205,7 +1142,7 @@ body.page-id-3435 .quick-nav {
     border: 1px solid #dadfe6;
     border-radius: 999px;
     position: sticky;
-    top: calc(var(--jpf-header-height, 84px) + 8px);
+    top: 8px;
     z-index: 20;
 }
 
@@ -1528,15 +1465,6 @@ body.page-id-3435 .case-grid {
     margin-top: 8px;
 }
 
-/* Pin to the current 4-column layout at wide viewports: without this,
-   auto-fit would add extra columns (shrinking each photo) once the widened
-   page container gives it enough room, instead of just growing the cards. */
-@media (min-width: 1024px) {
-    body.page-id-3435 .case-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
 body.page-id-3435 .case-card {
     background: #fff;
     border: 1px solid #dadfe6;
@@ -1686,13 +1614,6 @@ body.page-id-3435 .equipment-grid {
     margin-top: 8px;
 }
 
-/* Pin to the current 4-column layout at wide viewports (see .case-grid). */
-@media (min-width: 1024px) {
-    body.page-id-3435 .equipment-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
 body.page-id-3435 .equipment-card {
     background: #fff;
     border: 1px solid #dadfe6;
@@ -1726,14 +1647,6 @@ body.page-id-3435 .quality-grid {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
     margin-top: 20px;
-}
-
-/* Pin to the current 5-column (single-row) layout at wide viewports
-   (see .case-grid) so the 5 cards don't get split into an uneven 6-slot row. */
-@media (min-width: 1024px) {
-    body.page-id-3435 .quality-grid {
-        grid-template-columns: repeat(5, 1fr);
-    }
 }
 
 body.page-id-3435 .quality-card {
@@ -1773,7 +1686,6 @@ body.page-id-3435 .company-intro {
 
 body.page-id-3435 .company-intro__text p {
     color: #3c4a5a;
-    max-width: 620px;
 }
 
 body.page-id-3435 .company-intro__photos {
@@ -1818,12 +1730,6 @@ body.page-id-3435 .final-cta {
 body.page-id-3435 .final-cta h2,
 body.page-id-3435 .final-cta p {
     color: #fff;
-}
-
-body.page-id-3435 .final-cta p:not(.final-cta__lead) {
-    max-width: 640px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 body.page-id-3435 .final-cta__lead {
@@ -1929,19 +1835,6 @@ body.page-id-3435 .reveal.jpf-reveal-in {
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
     transition: box-shadow .2s ease;
-}
-
-/* Keep the sticky header below the WP admin bar (logged-in preview only;
-   the admin bar is fixed at top:0 with its own higher z-index, so without
-   this offset the sticky header would sit underneath it while scrolling). */
-body.admin-bar .header {
-    top: 32px;
-}
-
-@media (max-width: 782px) {
-    body.admin-bar .header {
-        top: 46px;
-    }
 }
 
 .header.jpf-scrolled {

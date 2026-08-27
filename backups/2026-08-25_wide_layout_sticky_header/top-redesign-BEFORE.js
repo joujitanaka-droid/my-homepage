@@ -4,24 +4,15 @@
     // Sticky header compact-on-scroll (site-wide).
     var siteHeader = document.querySelector('.header');
     if (siteHeader) {
-        // Publish the header's real rendered height as a CSS var so other
-        // sticky elements (e.g. the top-page quick-nav) can offset below it
-        // instead of being hidden underneath the now-permanent sticky header.
-        var updateHeaderHeightVar = function () {
-            document.documentElement.style.setProperty('--jpf-header-height', siteHeader.offsetHeight + 'px');
-        };
-
         var applyScrollState = function () {
             if (window.scrollY > 40) {
                 siteHeader.classList.add('jpf-scrolled');
             } else {
                 siteHeader.classList.remove('jpf-scrolled');
             }
-            updateHeaderHeightVar();
         };
         applyScrollState();
         window.addEventListener('scroll', applyScrollState, { passive: true });
-        window.addEventListener('resize', updateHeaderHeightVar, { passive: true });
     }
 
     // Reveal-on-scroll for .reveal sections (progressive enhancement only).
