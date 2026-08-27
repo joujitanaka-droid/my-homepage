@@ -780,8 +780,12 @@ body.page-id-3435 .hero {
 }
 
 /* overflow-x safety net for the 100vw hero breakout above (prevents the
-   vertical-scrollbar-width edge case from introducing horizontal scroll). */
-body.page-id-3435 {
+   vertical-scrollbar-width edge case from introducing horizontal scroll).
+   Scoped to .neve-main (a sibling of .header, not an ancestor) rather than
+   body: overflow-x on body can break position:sticky on .header in some
+   browsers, since it stops the body->viewport overflow propagation that
+   sticky's containing-block calculation otherwise relies on. */
+body.page-id-3435 .neve-main {
     overflow-x: hidden;
 }
 
