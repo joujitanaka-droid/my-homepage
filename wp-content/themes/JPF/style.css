@@ -1924,6 +1924,19 @@ body.page-id-3435 .reveal.jpf-reveal-in {
    2026-08-23b: Header/footer redesign (sales navigation, site-wide)
 ========================= */
 
+/* Neve core ships `body > .wrapper:not(.et-fb-iframe-ancestor) { overflow: hidden; }`,
+   which has higher specificity than Neve's own `.wrapper { overflow: visible; }` and
+   therefore wins. Since .wrapper is .header's direct parent, this silently breaks
+   position:sticky on .header: a non-visible overflow on any ancestor becomes the
+   sticky containing block instead of the true viewport, and .wrapper never actually
+   scrolls on its own, so the "stuck" state never triggers. Restore full visibility
+   here (same selector, so it wins on source order) so .header sticks to the real
+   viewport again. Horizontal-overflow protection for the full-bleed hero is provided
+   separately at .neve-main (a sibling of .header, unaffected by this). */
+body > .wrapper:not(.et-fb-iframe-ancestor) {
+    overflow: visible;
+}
+
 /* Sticky header */
 .header {
     position: sticky;
