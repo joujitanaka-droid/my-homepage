@@ -1657,10 +1657,12 @@ body.page-id-3435 .reason-card p {
     color: #4a5866;
 }
 
-/* Capability / material / size columns */
+/* Capability / material columns: 2 equal columns (対応加工 / 対応材質).
+   Explicit 1fr 1fr (not auto-fit) so the now-wider page container can't
+   silently leave one column stretched oddly wide with only 2 items. */
 body.page-id-3435 .capability-cols {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: 1fr 1fr;
     gap: 24px;
     margin-top: 8px;
 }
