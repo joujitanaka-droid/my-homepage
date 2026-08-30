@@ -2689,12 +2689,6 @@ body.page-id-3337 .slowth-final-cta__lead {
     margin: 0 0 12px;
 }
 
-body.page-id-3337 .slowth-final-cta p:not(.slowth-final-cta__lead):not(.slowth-back-link) {
-    max-width: 680px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 body.page-id-3337 .slowth-back-link {
     margin-top: 18px;
 }

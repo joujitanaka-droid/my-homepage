@@ -1133,7 +1133,7 @@ function jpf_force_redirect_english_top2() {
 add_filter( 'theme_mod_button_base_text_setting', 'jpf_slowth_header_cta_text' );
 function jpf_slowth_header_cta_text( $value ) {
     if ( is_page( 'slowth' ) && ! jpf_is_english_request() ) {
-        return '導入相談';
+        return '導入相談・デモ依頼';
     }
 
     return $value;
