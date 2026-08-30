@@ -2434,6 +2434,25 @@ body.page-id-3337 .video-wrapper iframe {
     height: auto;
 }
 
+body.page-id-3337 .slowth-video-more {
+    margin-top: 20px;
+}
+
+body.page-id-3337 .slowth-video-more summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: #14161a;
+    padding: 10px 16px;
+    border: 1px solid #e2e4e8;
+    border-radius: 999px;
+    display: inline-block;
+    background: #fff;
+}
+
+body.page-id-3337 .slowth-video-more[open] summary {
+    margin-bottom: 16px;
+}
+
 /* Feature cards */
 body.page-id-3337 .slowth-feature-grid {
     display: grid;

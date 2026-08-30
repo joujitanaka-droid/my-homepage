@@ -186,10 +186,7 @@ add_filter( 'body_class', 'jpf_add_english_slowth_body_class' );
 add_filter( 'pre_get_document_title', 'jpf_english_slowth_document_title' );
 add_filter( 'redirect_canonical', 'jpf_disable_english_slowth_canonical_redirect', 10, 2 );
 add_filter( 'pll_check_canonical_url', 'jpf_disable_english_slowth_polylang_canonical' );
-// 2026-08-30: 「さらに動画を見る」展開分の追加動画をページ表示から完全に削除
-// したため、この末尾追記フィルターは無効化(関数定義・動画ID・過去データは
-// 変更せず保持。フックしないだけで再有効化も容易)。
-// add_filter( 'the_content', 'jpf_append_japanese_slowth_test_videos', 20 );
+add_filter( 'the_content', 'jpf_append_japanese_slowth_test_videos', 20 );
 add_filter( 'the_content', 'jpf_reverse_slowth_video_grids', 21 );
 add_filter( 'the_content', 'jpf_update_japanese_slowth_case2_text', 22 );
 add_filter( 'the_content', 'jpf_replace_japanese_content_hero_text', 25 );
