@@ -345,7 +345,7 @@ function jpf_get_english_menu_order_rank( $item ) {
         return 95;
     }
 
-    if ( 'https://jpf.diksoftware.online/view/customer_login.php' === $item->url ) {
+    if ( 'https://jpf.diksoftware.online/view/customer_login' === $item->url ) {
         return 90;
     }
 
@@ -380,8 +380,8 @@ function jpf_fix_home_menu_links( $items, $args ) {
     );
 
     $english_external_title_map = array(
-        'https://jpe.jp-factory.co.jp/'                          => 'JPF Engineering',
-        'https://jpf.diksoftware.online/view/customer_login.php' => 'Customer Login',
+        'https://jpe.jp-factory.co.jp/'                      => 'JPF Engineering',
+        'https://jpf.diksoftware.online/view/customer_login' => 'Customer Login',
     );
 
     $jp_to_en_path_map = array(
