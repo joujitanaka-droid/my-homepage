@@ -19,7 +19,7 @@
         display: flex;
         flex-wrap: nowrap;
         align-items: center;
-        gap: 4px;
+        gap: 6px;
     }
 
     #header-grid .builder-item--primary-menu .primary-menu-ul > li {
@@ -30,14 +30,7 @@
         white-space: nowrap;
         font-size: 16px;
         line-height: 1.2;
-        padding: 2px 5px;
-    }
-
-    /* 業者様ログイン: 外注先の業務運用に必須の固定導線。他のナビ項目が
-       将来増減・幅変更しても、このリンクだけは絶対に縮小・省略されない
-       ことを明示的に保証する(flex-shrink:0)。 */
-    #header-grid .builder-item--primary-menu .primary-menu-ul > li.jpf-header-sublink {
-        flex-shrink: 0;
+        padding: 2px 6px;
     }
 
     :is(html[lang^="en"], body.jpf-slowth-en, body.jpf-top-en) #header-grid .header-main-inner .row.row--wrapper {
@@ -2062,17 +2055,14 @@ body.admin-bar .header {
    as a "secondary" cluster at the right edge of the nav. */
 #header-grid .builder-item--primary-menu .primary-menu-ul > li.jpf-header-sublink > .wrap > a,
 #header-menu-sidebar .primary-menu-ul > li.jpf-header-sublink > .wrap > a {
-    font-size: 13px;
-    font-weight: 700;
-    opacity: .9;
-    color: #0f4c81;
-    white-space: nowrap;
+    font-size: 12px;
+    opacity: .7;
     padding: 2px 6px;
 }
 
 #header-grid .builder-item--primary-menu .primary-menu-ul > li.jpf-header-sublink {
-    margin-left: 10px;
-    padding-left: 10px;
+    margin-left: 14px;
+    padding-left: 14px;
     border-left: 1px solid #dadfe6;
 }
 
