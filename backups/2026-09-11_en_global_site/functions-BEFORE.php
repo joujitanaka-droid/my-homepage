@@ -196,48 +196,6 @@ add_filter( 'the_content', 'jpf_replace_japanese_content_hero_text', 25 );
 add_filter( 'the_content', 'jpf_replace_japanese_home_management_text', 9999 );
 add_action( 'init', 'jpf_force_redirect_english_top2', 1 );
 add_action( 'template_redirect', 'jpf_force_render_english_home', 0 );
-add_action( 'pre_get_posts', 'jpf_bind_english_home_main_query' );
-
-/**
- * /en/ is rendered by force-including template-top-en.php directly (see
- * jpf_force_render_english_home() below), bypassing normal template
- * selection. Left alone, WordPress's own URL resolution for the bare "/en/"
- * request doesn't cleanly resolve to a specific post, so the main query (and
- * anything reading it — AIOSEO's title/meta/OGP/schema output in particular)
- * was falling back to the blog "posts page" (page_for_posts, an unrelated
- * News listing) and stamping /en/ with that page's title and structured
- * data. Binding the main query to post 2385 (top-en, the correct
- * Polylang-English-tagged post) here, before template_redirect runs, gives
- * AIOSEO/Polylang/etc. the right post to key off of — this only changes
- * which object the *query* resolves to for SEO/plugin purposes; the actual
- * HTML still comes entirely from template-top-en.php, unchanged.
- */
-function jpf_bind_english_home_main_query( $query ) {
-    if ( is_admin() || ! $query->is_main_query() ) {
-        return;
-    }
-
-    if ( ! jpf_is_english_home_request() ) {
-        return;
-    }
-
-    $query->init();
-    $query->set( 'page_id', 2385 );
-    $query->is_page        = true;
-    $query->is_singular    = true;
-    $query->is_home        = false;
-    $query->is_front_page  = false;
-    $query->is_404         = false;
-    $query->is_archive     = false;
-    $query->is_category    = false;
-    $query->is_tag         = false;
-    $query->is_author      = false;
-    $query->is_date        = false;
-    $query->is_search      = false;
-    $query->is_posts_page  = false;
-    $query->queried_object    = get_post( 2385 );
-    $query->queried_object_id = 2385;
-}
 
 function jpf_is_english_request() {
     $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
