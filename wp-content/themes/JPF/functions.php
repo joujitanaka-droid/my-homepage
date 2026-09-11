@@ -534,6 +534,21 @@ function jpf_fix_home_menu_links( $items, $args ) {
             $item->url = $legacy_url_map[ $item->url ];
         }
 
+        // In-page anchor links (Main menu-en's new Capabilities / Machining
+        // Examples / Materials / Equipment / Quality / Company / Request a
+        // Quote items, all "/en/#section") are a deliberate exception to all
+        // the rewriting below: jpf_get_normalized_path() discards the URL
+        // fragment, so without this guard every one of those 7 items
+        // normalizes to the same "/en/" path — collapsing them onto the
+        // single hardcoded '/en/' => 'HOME' title below, and then getting
+        // deduped down to just one surviving item further down this
+        // function. None of that legacy JP/EN-page rewriting applies to
+        // these anchor items; they're already correct, English-only links.
+        $has_url_fragment = '' !== (string) wp_parse_url( $item->url, PHP_URL_FRAGMENT );
+        if ( $has_url_fragment ) {
+            continue;
+        }
+
         if ( jpf_is_english_request() ) {
             $is_lang_item = is_array( $item->classes ) && in_array( 'lang-item', $item->classes, true );
             $normalized_path = jpf_get_normalized_path( $item->url );
@@ -624,17 +639,21 @@ function jpf_fix_home_menu_links( $items, $args ) {
         }
 
         // URL重複除去（同一パスのアイテムを1つに絞る、言語スイッチャーは除外）
+        // Dedup key includes the URL fragment so intentional in-page anchor
+        // links that share "/en/" as their path (Capabilities / Machining
+        // Examples / Materials / ... / Request a Quote) are treated as
+        // distinct items, not collapsed onto a single survivor.
         $seen_paths = array();
         foreach ( $items as $index => $item ) {
             $is_lang_item = is_array( $item->classes ) && in_array( 'lang-item', $item->classes, true );
             if ( $is_lang_item ) {
                 continue;
             }
-            $normalized_path = jpf_get_normalized_path( $item->url );
-            if ( isset( $seen_paths[ $normalized_path ] ) ) {
+            $dedup_key = jpf_get_normalized_path( $item->url ) . '#' . (string) wp_parse_url( $item->url, PHP_URL_FRAGMENT );
+            if ( isset( $seen_paths[ $dedup_key ] ) ) {
                 unset( $items[ $index ] );
             } else {
-                $seen_paths[ $normalized_path ] = true;
+                $seen_paths[ $dedup_key ] = true;
             }
         }
 
