@@ -1267,8 +1267,26 @@ function jpf_force_redirect_english_top2() {
  */
 add_filter( 'theme_mod_button_base_text_setting', 'jpf_slowth_header_cta_text' );
 function jpf_slowth_header_cta_text( $value ) {
+    // English pages: this theme mod's default ("図面を送って無料見積")
+    // was showing up untranslated in the header CTA button even on /en/,
+    // and jpf_english_header_cta_link() below sent that click to the
+    // Japanese /quote/ form — checked first since it must win over the
+    // JP-only SlowTH override below on every English request.
+    if ( jpf_is_english_request() ) {
+        return 'REQUEST A QUOTE';
+    }
+
     if ( is_page( 'slowth' ) && ! jpf_is_english_request() ) {
         return '導入相談';
+    }
+
+    return $value;
+}
+
+add_filter( 'theme_mod_button_base_link_setting', 'jpf_english_header_cta_link' );
+function jpf_english_header_cta_link( $value ) {
+    if ( jpf_is_english_request() ) {
+        return 'https://jp-factory.co.jp/en/#quote';
     }
 
     return $value;
