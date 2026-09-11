@@ -198,6 +198,7 @@ add_action( 'init', 'jpf_force_redirect_english_top2', 1 );
 add_action( 'template_redirect', 'jpf_force_render_english_home', 0 );
 add_action( 'pre_get_posts', 'jpf_bind_english_home_main_query' );
 add_filter( 'pll_rel_hreflang_attributes', 'jpf_fix_english_home_hreflang_url' );
+add_filter( 'aioseo_schema_output', 'jpf_fix_english_home_schema_urls' );
 
 /**
  * Post 2385's real permalink is /en/top-2/ (its post_name), which
@@ -214,6 +215,32 @@ function jpf_fix_english_home_hreflang_url( $hreflangs ) {
     }
 
     return $hreflangs;
+}
+
+/**
+ * Same /en/top-2/ vs. canonical /en/ mismatch as the hreflang fix above,
+ * but for AIOSEO's JSON-LD structured data: its WebPage/BreadcrumbList/
+ * Organization-logo @id and url fields are all built from get_permalink(),
+ * so they read "https://jp-factory.co.jp/en/top-2/#..." instead of the
+ * canonical "/en/". Scoped to the English-home request only (not a
+ * general site-wide string filter) so no other page's schema output is
+ * touched — a plain string replace on the whole graph, since AIOSEO gives
+ * no cleaner per-field way to intercept this.
+ */
+function jpf_fix_english_home_schema_urls( $graph ) {
+    if ( ! jpf_is_english_home_request() ) {
+        return $graph;
+    }
+
+    $json = wp_json_encode( $graph );
+    if ( ! is_string( $json ) ) {
+        return $graph;
+    }
+
+    $json    = str_replace( 'jp-factory.co.jp\/en\/top-2\/', 'jp-factory.co.jp\/en\/', $json );
+    $decoded = json_decode( $json, true );
+
+    return is_array( $decoded ) ? $decoded : $graph;
 }
 
 /**
