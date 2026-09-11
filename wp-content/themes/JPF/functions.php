@@ -263,6 +263,81 @@ function jpf_is_english_request() {
     return 0 === strpos( untrailingslashit( $request_uri ) . '/', '/en/' );
 }
 
+/**
+ * Like jpf_is_english_request(), but also true for the Snow Monkey Forms
+ * REST API calls the RFQ form (post 3566) makes for its "Confirm" and
+ * "Send" steps — those requests hit /wp-json/... (not /en/...), so
+ * jpf_is_english_request()'s REQUEST_URI check alone can't see that they
+ * originated from the English page. The site's whole WordPress install
+ * has locale ja, and Snow Monkey Forms ships a partial Japanese
+ * translation — several of its own strings ("Send", "Back", spam/upload
+ * error messages) DO have ja translations and would otherwise render in
+ * Japanese on the English RFQ form, including ones only generated inside
+ * that REST response (see jpf_translate_snow_monkey_forms_strings_to_english()
+ * below). Falls back to checking the request's Referer header for these
+ * AJAX calls, since the plugin's own JS always sends the originating page
+ * as the referer.
+ */
+function jpf_is_english_context_request() {
+    if ( jpf_is_english_request() ) {
+        return true;
+    }
+
+    $referer = isset( $_SERVER['HTTP_REFERER'] ) ? wp_unslash( $_SERVER['HTTP_REFERER'] ) : '';
+    if ( ! $referer ) {
+        return false;
+    }
+
+    $referer_path = wp_parse_url( $referer, PHP_URL_PATH );
+
+    return is_string( $referer_path ) && 0 === strpos( untrailingslashit( $referer_path ) . '/', '/en/' );
+}
+
+/**
+ * Force a handful of customer-facing Snow Monkey Forms strings back to
+ * English for the /en/ RFQ form. Scoped strictly to English-context
+ * requests (see jpf_is_english_context_request()) so the JP-side quote
+ * form (page 3474 / form 3473) keeps its normal Japanese strings
+ * unchanged in every other request.
+ */
+add_filter( 'gettext', 'jpf_translate_snow_monkey_forms_strings_to_english', 10, 3 );
+function jpf_translate_snow_monkey_forms_strings_to_english( $translated, $original, $domain ) {
+    if ( 'snow-monkey-forms' !== $domain ) {
+        return $translated;
+    }
+
+    if ( ! jpf_is_english_context_request() ) {
+        return $translated;
+    }
+
+    // Force back to the plugin's own original English source string
+    // (identical to $original for all of these) rather than whatever ja
+    // translation snow-monkey-forms-ja.mo supplied.
+    $english_strings = array(
+        'Please enter.',
+        'Please enter a valid email address.',
+        'Please enter a valid URL.',
+        'Upload failed.',
+        'Confirm',
+        'Back',
+        'Send',
+        'Uploaded file',
+        'Clear',
+        'Invalid access.',
+        'There is a possibility of spamming.',
+        'An error occurred during file upload.',
+        'Attachment of file failed.',
+        'Failed to send administrator email.',
+        'Failed to send auto reply email.',
+    );
+
+    if ( in_array( $original, $english_strings, true ) ) {
+        return $original;
+    }
+
+    return $translated;
+}
+
 function jpf_is_english_slowth_request() {
     $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
 
