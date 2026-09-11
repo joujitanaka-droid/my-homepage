@@ -343,8 +343,17 @@ $rfq_form_id = 3566;
                         <p class="jpf-en-quote-band__lead">Upload your drawing and our engineering team in Kyoto will review it and send you a quotation.</p>
                         <div class="jpf-en-quote-form">
                             <?php
-                            $rfq_form_content = get_post_field( 'post_content', $rfq_form_id );
-                            echo do_blocks( $rfq_form_content );
+                            // Render via the plugin's own form-embed block (not the raw
+                            // post_content of the form CPT): this is the same mechanism
+                            // page 3474 uses for the JP quote form (3473) — it wraps the
+                            // output in the actual <form class="snow-monkey-form" ...>
+                            // element with working <input>/<select>/<textarea> controls,
+                            // the confirm/complete screen JS, and CSRF nonce. Calling
+                            // do_blocks() directly on the form CPT's own post_content (the
+                            // control-* blocks) renders only their static label markup with
+                            // no real form controls, since those blocks are designed to be
+                            // rendered *inside* this embed block, not standalone.
+                            echo do_blocks( '<!-- wp:snow-monkey-forms/snow-monkey-form {"formId":' . (int) $rfq_form_id . '} /-->' );
                             ?>
                         </div>
                         <?php /* Privacy Policy link intentionally omitted: page ID 3 (privacy-policy) is currently unpublished (draft) — see report. */ ?>
