@@ -25,7 +25,10 @@
     }
 
     // Reveal-on-scroll for .reveal sections (progressive enhancement only).
-    var revealEls = document.querySelectorAll('.reveal');
+    // .jpf-en-reveal is the English global site's own reveal class (kept
+    // separate from .reveal so its CSS stays fully scoped under
+    // .jpf-en-home instead of reusing body.page-id-3435 .reveal rules).
+    var revealEls = document.querySelectorAll('.reveal, .jpf-en-reveal');
     if (revealEls.length) {
         if ('IntersectionObserver' in window) {
             revealEls.forEach(function (el) {

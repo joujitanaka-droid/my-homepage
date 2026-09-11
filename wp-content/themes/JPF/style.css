@@ -2779,3 +2779,699 @@ body.page-id-3337 .reveal.jpf-reveal-in {
     transition: opacity .6s ease, transform .6s ease;
 }
 
+/* =========================================================================
+   2026-09-11: JPF Global English site (/en/, template-top-en.php)
+   Deliberately self-contained: every rule below is scoped under
+   .jpf-en-home so this page does not depend on body.page-id-3435 (the JP
+   top page's design system). Colors/spacing are re-declared as their own
+   CSS custom properties rather than reused from the JP page, so future
+   changes to the JP top page's CSS cannot break this page's layout.
+========================================================================= */
+
+.jpf-en-home {
+    --en-navy: #083158;
+    --en-navy-deep: #050d16;
+    --en-blue: #0f4c81;
+    --en-gold: #f6b21a;
+    --en-gold-deep: #e0a015;
+    --en-text: #17324a;
+    --en-text-light: #4a5866;
+    --en-border: #dadfe6;
+    --en-bg-alt: #f8fafc;
+    --en-max-width: 1600px;
+
+    color: var(--en-text);
+    overflow-x: hidden;
+}
+
+.jpf-en-home * {
+    box-sizing: border-box;
+}
+
+.jpf-en-home p {
+    margin-bottom: revert;
+}
+
+/* Hero: full-bleed, breaks out of the page's normal max-width wrapper. */
+.jpf-en-home .jpf-en-hero {
+    color: #fff;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    margin-top: 0;
+    min-height: 62vh;
+    padding: 56px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background:
+        linear-gradient(110deg, rgba(10, 28, 44, 0.86) 0%, rgba(8, 49, 88, 0.58) 58%, rgba(15, 76, 129, 0.35) 100%),
+        url("https://jp-factory.co.jp/wp-content/uploads/2024/03/IMG_0730-1536x1152.jpg") center/cover no-repeat;
+    box-shadow: 0 14px 28px rgba(16, 28, 44, 0.12);
+}
+
+@media (min-width: 640px) {
+    .jpf-en-home .jpf-en-hero {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .jpf-en-home .jpf-en-hero {
+        padding-left: 56px;
+        padding-right: 56px;
+    }
+}
+
+@media (min-width: 1920px) {
+    .jpf-en-home .jpf-en-hero {
+        padding-left: 96px;
+        padding-right: 96px;
+    }
+}
+
+.jpf-en-home .jpf-en-hero__kicker {
+    margin: 0;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    color: #ffe8a6;
+}
+
+.jpf-en-home .jpf-en-hero h1 {
+    margin: 10px 0 14px;
+    font-size: clamp(1.9rem, 4.2vw, 3.4rem);
+    line-height: 1.2;
+    color: #fff;
+}
+
+.jpf-en-home .jpf-en-hero__copy {
+    max-width: 680px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+}
+
+.jpf-en-home .jpf-en-hero__actions {
+    margin-top: 22px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Buttons */
+.jpf-en-home .jpf-en-btn {
+    display: inline-block;
+    padding: 13px 22px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    transition: transform .2s ease, background .2s ease;
+    border: 1px solid transparent;
+}
+
+.jpf-en-home .jpf-en-btn--primary {
+    background: var(--en-gold);
+    color: var(--en-navy);
+}
+
+.jpf-en-home .jpf-en-btn--primary:hover {
+    background: var(--en-gold-deep);
+    transform: translateY(-2px);
+}
+
+.jpf-en-home .jpf-en-btn--ghost {
+    border-color: rgba(255, 255, 255, .6);
+    color: #fff;
+}
+
+.jpf-en-home .jpf-en-btn--ghost:hover {
+    background: rgba(255, 255, 255, .14);
+}
+
+.jpf-en-home .jpf-en-btn--outline {
+    border-color: var(--en-border);
+    color: var(--en-blue);
+    background: #fff;
+}
+
+.jpf-en-home .jpf-en-btn--outline:hover {
+    background: var(--en-bg-alt);
+}
+
+/* Quick nav */
+.jpf-en-home .jpf-en-quicknav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin: 18px 0 0;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid var(--en-border);
+    border-radius: 999px;
+    position: sticky;
+    top: calc(var(--jpf-header-height, 84px) + 8px);
+    z-index: 20;
+    max-width: var(--en-max-width);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.jpf-en-home .jpf-en-quicknav a {
+    text-decoration: none;
+    color: var(--en-blue);
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 7px 13px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.jpf-en-home .jpf-en-quicknav a:hover {
+    background: var(--en-bg-alt);
+}
+
+@media (max-width: 640px) {
+    .jpf-en-home .jpf-en-quicknav {
+        justify-content: flex-start;
+        overflow-x: auto;
+        border-radius: 12px;
+        -webkit-overflow-scrolling: touch;
+        position: static;
+    }
+}
+
+/* Sections */
+.jpf-en-home .jpf-en-section,
+.jpf-en-home .jpf-en-quote-band {
+    max-width: var(--en-max-width);
+    margin: 0 auto;
+    padding: 48px 20px;
+}
+
+@media (min-width: 1200px) {
+    .jpf-en-home .jpf-en-section,
+    .jpf-en-home .jpf-en-quote-band {
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+}
+
+@media (min-width: 1440px) {
+    .jpf-en-home .jpf-en-section,
+    .jpf-en-home .jpf-en-quote-band {
+        padding-left: 35px;
+        padding-right: 35px;
+    }
+}
+
+@media (min-width: 1920px) {
+    .jpf-en-home .jpf-en-section,
+    .jpf-en-home .jpf-en-quote-band {
+        padding-left: 45px;
+        padding-right: 45px;
+    }
+}
+
+.jpf-en-home .jpf-en-section--alt {
+    background: var(--en-bg-alt);
+    max-width: 100%;
+}
+
+.jpf-en-home .jpf-en-section--alt > * {
+    max-width: var(--en-max-width);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.jpf-en-home .jpf-en-section h2 {
+    margin: 0 0 14px;
+    font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+    color: var(--en-navy);
+    text-align: left;
+    padding-left: 12px;
+    border-left: 4px solid var(--en-gold);
+}
+
+.jpf-en-home .jpf-en-section__lead {
+    max-width: 760px;
+    color: var(--en-text-light);
+    margin-bottom: 24px;
+}
+
+.jpf-en-home .jpf-en-section-cta {
+    margin-top: 28px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Capabilities */
+.jpf-en-home .jpf-en-capability-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 16px;
+    margin-top: 8px;
+}
+
+@media (min-width: 640px) {
+    .jpf-en-home .jpf-en-capability-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .jpf-en-home .jpf-en-capability-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.jpf-en-home .jpf-en-capability-card {
+    background: #fff;
+    border: 1px solid var(--en-border);
+    border-radius: 16px;
+    padding: 22px 20px;
+    box-shadow: 0 6px 16px rgba(12, 28, 44, 0.05);
+}
+
+.jpf-en-home .jpf-en-capability-card h3 {
+    margin: 0 0 8px;
+    font-size: 1.02rem;
+    color: var(--en-navy);
+}
+
+.jpf-en-home .jpf-en-capability-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--en-text-light);
+}
+
+.jpf-en-home .jpf-en-photo-duo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 28px;
+}
+
+@media (max-width: 640px) {
+    .jpf-en-home .jpf-en-photo-duo {
+        grid-template-columns: 1fr;
+    }
+}
+
+.jpf-en-home .jpf-en-photo-duo figure {
+    margin: 0;
+}
+
+.jpf-en-home .jpf-en-photo-duo img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 14px;
+    display: block;
+}
+
+.jpf-en-home .jpf-en-photo-duo figcaption {
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: var(--en-text-light);
+    text-align: center;
+}
+
+/* Machining Examples gallery */
+.jpf-en-home .jpf-en-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 18px;
+    margin-top: 8px;
+}
+
+@media (min-width: 640px) {
+    .jpf-en-home .jpf-en-gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .jpf-en-home .jpf-en-gallery-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.jpf-en-home .jpf-en-gallery-card {
+    background: #fff;
+    border: 1px solid var(--en-border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(12, 28, 44, 0.05);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.jpf-en-home .jpf-en-gallery-card img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+}
+
+.jpf-en-home .jpf-en-gallery-card__body {
+    padding: 14px 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Tags */
+.jpf-en-home .jpf-en-tag {
+    display: inline-block;
+    background: #fff;
+    border: 1px solid var(--en-border);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    color: var(--en-text);
+}
+
+.jpf-en-home .jpf-en-tag--accent {
+    background: var(--en-gold);
+    color: var(--en-navy);
+    border-color: var(--en-gold);
+    font-weight: 700;
+}
+
+/* Why JPF */
+.jpf-en-home .jpf-en-why-list {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 18px;
+}
+
+@media (min-width: 640px) {
+    .jpf-en-home .jpf-en-why-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .jpf-en-home .jpf-en-why-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.jpf-en-home .jpf-en-why-list li {
+    background: #fff;
+    border: 1px solid var(--en-border);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 6px 16px rgba(12, 28, 44, 0.05);
+}
+
+.jpf-en-home .jpf-en-why-list h3 {
+    margin: 0 0 8px;
+    font-size: 1rem;
+    color: var(--en-navy);
+}
+
+.jpf-en-home .jpf-en-why-list p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--en-text-light);
+}
+
+/* Materials */
+.jpf-en-home .jpf-en-material-list {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Equipment */
+.jpf-en-home .jpf-en-equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 18px;
+    margin-top: 8px;
+}
+
+@media (min-width: 640px) {
+    .jpf-en-home .jpf-en-equipment-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .jpf-en-home .jpf-en-equipment-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.jpf-en-home .jpf-en-equipment-card {
+    background: #fff;
+    border: 1px solid var(--en-border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(12, 28, 44, 0.05);
+}
+
+.jpf-en-home .jpf-en-equipment-card img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+}
+
+.jpf-en-home .jpf-en-equipment-card h3 {
+    margin: 14px 18px 4px;
+    font-size: 1rem;
+    color: var(--en-navy);
+}
+
+.jpf-en-home .jpf-en-equipment-card p {
+    margin: 0 18px 18px;
+    font-size: 0.88rem;
+    color: var(--en-text-light);
+}
+
+/* Quality */
+.jpf-en-home .jpf-en-quality-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 16px;
+    margin-top: 8px;
+}
+
+@media (min-width: 640px) {
+    .jpf-en-home .jpf-en-quality-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .jpf-en-home .jpf-en-quality-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+.jpf-en-home .jpf-en-quality-card {
+    background: #fff;
+    border: 1px solid var(--en-border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(12, 28, 44, 0.05);
+}
+
+.jpf-en-home .jpf-en-quality-card img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+}
+
+.jpf-en-home .jpf-en-quality-card h3 {
+    margin: 12px 14px 4px;
+    font-size: 0.92rem;
+    color: var(--en-navy);
+}
+
+.jpf-en-home .jpf-en-quality-card p {
+    margin: 0 14px 14px;
+    font-size: 0.82rem;
+    color: var(--en-text-light);
+}
+
+/* How to Order steps */
+.jpf-en-home .jpf-en-steps-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 16px;
+    margin-top: 8px;
+}
+
+@media (min-width: 640px) {
+    .jpf-en-home .jpf-en-steps-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .jpf-en-home .jpf-en-steps-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+.jpf-en-home .jpf-en-step {
+    background: #fff;
+    border: 1px solid var(--en-border);
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 6px 16px rgba(12, 28, 44, 0.05);
+}
+
+.jpf-en-home .jpf-en-step__num {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: var(--en-blue);
+    background: #eaf1f9;
+    border-radius: 999px;
+    padding: 4px 10px;
+}
+
+.jpf-en-home .jpf-en-step h3 {
+    margin: 0 0 6px;
+    font-size: 0.95rem;
+    color: var(--en-navy);
+}
+
+.jpf-en-home .jpf-en-step p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--en-text-light);
+}
+
+/* International Orders */
+.jpf-en-home .jpf-en-intl-list {
+    margin: 8px 0 0;
+    padding-left: 20px;
+    color: var(--en-text-light);
+    max-width: 900px;
+}
+
+.jpf-en-home .jpf-en-intl-list li {
+    margin-bottom: 10px;
+}
+
+/* Company */
+.jpf-en-home .jpf-en-company-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: center;
+    margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+    .jpf-en-home .jpf-en-company-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.jpf-en-home .jpf-en-company-photo img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 14px;
+    display: block;
+}
+
+.jpf-en-home .jpf-en-company-info p {
+    color: var(--en-text-light);
+}
+
+.jpf-en-home .jpf-en-company-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    margin-top: 14px;
+}
+
+.jpf-en-home .jpf-en-company-links a {
+    color: var(--en-blue);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.jpf-en-home .jpf-en-company-links a:hover {
+    text-decoration: underline;
+}
+
+/* Request a Quote band */
+.jpf-en-home .jpf-en-quote-band {
+    text-align: left;
+    border-radius: 20px;
+    background: linear-gradient(150deg, var(--en-navy-deep) 0%, #0a1a2b 55%, #0f2743 100%);
+    color: #fff;
+    padding: 56px 28px;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
+    margin-bottom: 48px;
+}
+
+.jpf-en-home .jpf-en-quote-band h2 {
+    color: #fff;
+    border-left-color: var(--en-gold);
+}
+
+.jpf-en-home .jpf-en-quote-band__lead {
+    max-width: 640px;
+    color: rgba(255, 255, 255, 0.88);
+    margin-bottom: 28px;
+}
+
+.jpf-en-home .jpf-en-quote-form {
+    max-width: 720px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px;
+    color: var(--en-text);
+}
+
+@media (max-width: 640px) {
+    .jpf-en-home .jpf-en-quote-form {
+        padding: 18px;
+    }
+}
+
+/* Reveal-on-scroll (shared mechanism with the rest of the site via
+   top-redesign.js, which targets the generic .reveal class — these pages
+   use jpf-en-reveal as the base class name but the JS adds/removes the same
+   jpf-reveal-pending / jpf-reveal-in state classes it uses elsewhere). */
+.jpf-en-home .jpf-en-reveal {
+    opacity: 1;
+    transform: none;
+}
+
+.jpf-en-home .jpf-en-reveal.jpf-reveal-pending {
+    opacity: 0;
+    transform: translateY(16px);
+}
+
+.jpf-en-home .jpf-en-reveal.jpf-reveal-in {
+    opacity: 1;
+    transform: none;
+    transition: opacity .6s ease, transform .6s ease;
+}
+
