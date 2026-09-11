@@ -197,6 +197,24 @@ add_filter( 'the_content', 'jpf_replace_japanese_home_management_text', 9999 );
 add_action( 'init', 'jpf_force_redirect_english_top2', 1 );
 add_action( 'template_redirect', 'jpf_force_render_english_home', 0 );
 add_action( 'pre_get_posts', 'jpf_bind_english_home_main_query' );
+add_filter( 'pll_rel_hreflang_attributes', 'jpf_fix_english_home_hreflang_url' );
+
+/**
+ * Post 2385's real permalink is /en/top-2/ (its post_name), which
+ * jpf_force_redirect_english_top2() 301-redirects to the canonical /en/.
+ * Polylang's hreflang output uses the real permalink, so without this fix
+ * the hreflang="en" URL (emitted on both / and /en/) would point at the
+ * redirecting /en/top-2/ instead of matching the actual canonical URL.
+ * Only rewrites the URL when it is that specific post's URL, so hreflang
+ * output for every other page/post pair on the site is untouched.
+ */
+function jpf_fix_english_home_hreflang_url( $hreflangs ) {
+    if ( isset( $hreflangs['en'] ) && false !== strpos( $hreflangs['en'], '/en/top-2' ) ) {
+        $hreflangs['en'] = home_url( '/en/' );
+    }
+
+    return $hreflangs;
+}
 
 /**
  * /en/ is rendered by force-including template-top-en.php directly (see
