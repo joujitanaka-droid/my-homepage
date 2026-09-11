@@ -3484,22 +3484,26 @@ body.page-id-3337 .reveal.jpf-reveal-in {
    "REQUEST A QUOTE" header button don't fit the shared header's desktop-nav
    row at any common desktop/laptop width — confirmed via headless-browser
    testing that the button is pushed off-screen (not just visually tight)
-   at 1024/1200/1280/1366/1440px, only fitting again at ~1920px. Neve's own
-   desktop/mobile nav swap happens at a fixed 960px breakpoint
-   (.hide-on-desktop / .hide-on-tablet in the parent theme's
-   style-main-new.css), which is far too narrow for this item count. Rather
-   than fight that per-item, English pages keep using the already-tested
-   mobile hamburger nav (display:block, its own natural value at mobile
-   widths) all the way up to 1699px, matching the point where the desktop
-   nav is confirmed to actually fit. This only touches elements under
-   body.jpf-en-context, so the JP site's header keeps Neve's normal 960px
-   breakpoint unchanged. */
+   at 1024/1200/1280/1366/1440px, only fitting again at ~1920px, and that
+   this is a near-constant ~1490px total content width regardless of
+   viewport (not a small per-width overflow a couple of dropped items could
+   fix). Neve's own desktop/mobile nav swap happens at a fixed 960px
+   breakpoint (.hide-on-desktop / .hide-on-tablet in the parent theme's
+   style-main-new.css); an earlier version of this fix swapped to that
+   mobile row for 960–1699px, but the mobile row's own builder config has
+   no button_base component at all, so "REQUEST A QUOTE" — the single most
+   important element on this page — disappeared from the header entirely
+   in that range. Fixed instead by keeping the normal desktop row (so the
+   button, in the row's right-hand hfg-slot, keeps showing) and hiding only
+   its center hfg-slot (the crowded text nav + language switcher) for that
+   width range. The 7 nav items remain reachable via the in-page
+   .jpf-en-quicknav bar already present on template-top-en.php itself
+   (Capabilities/Machining Examples/Materials/Equipment/Quality/Company/
+   Request a Quote), so nothing here is otherwise unreachable. This only
+   touches elements under body.jpf-en-context, so the JP site's header
+   keeps Neve's normal 960px breakpoint and full nav unchanged. */
 @media (min-width: 960px) and (max-width: 1699px) {
-    body.jpf-en-context .header-main.hide-on-desktop {
-        display: block;
-    }
-
-    body.jpf-en-context .header-main.hide-on-mobile.hide-on-tablet {
+    body.jpf-en-context .header-main.hide-on-mobile.hide-on-tablet .hfg-slot.center {
         display: none;
     }
 }
