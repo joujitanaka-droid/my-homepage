@@ -1379,6 +1379,14 @@ function jpf_force_render_english_home() {
     }
 
     status_header( 200 );
+    // /en/ had no explicit Cache-Control before this page was rebuilt
+    // (2026-09-11), so browsers/proxies were free to use heuristic
+    // caching — a visitor who loaded the old "company introduction"
+    // version could keep seeing it from their own cache long after the
+    // server-side content changed, with no way to tell short of a hard
+    // refresh. Force revalidation on every request going forward so a
+    // page this content-critical never silently goes stale again.
+    nocache_headers();
     include get_stylesheet_directory() . '/template-top-en.php';
     exit;
 }
