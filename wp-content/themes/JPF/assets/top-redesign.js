@@ -101,6 +101,25 @@
         });
     });
 
+    // English RFQ form (post 3566) only: client-side file-size guard.
+    // Snow Monkey Forms has no built-in max-file-size option and attaches
+    // the uploaded drawing directly to the admin notification email — an
+    // oversized attachment can cause that email to silently bounce, so the
+    // JPF team would never see the RFQ. Scoped narrowly to
+    // #snow-monkey-form-3566's own file input (not site-wide .smf-form)
+    // specifically so this cannot change the JP quote form's behavior.
+    var rfqFileInput = document.querySelector('#snow-monkey-form-3566 input[type="file"]');
+    if (rfqFileInput) {
+        var RFQ_MAX_FILE_BYTES = 20 * 1024 * 1024; // 20MB, matches the form's own field description.
+        rfqFileInput.addEventListener('change', function () {
+            var file = rfqFileInput.files && rfqFileInput.files[0];
+            if (file && file.size > RFQ_MAX_FILE_BYTES) {
+                window.alert('This file is larger than 20MB. Please compress it or split it into a ZIP under 20MB, or contact us directly with a file-sharing link.');
+                rfqFileInput.value = '';
+            }
+        });
+    }
+
     // GA4/GTM completion events: quote_form_submit (/quote/) and
     // slowth_form_submit (/slowth-contact/).
     //
