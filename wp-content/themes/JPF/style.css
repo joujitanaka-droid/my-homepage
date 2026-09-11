@@ -3475,3 +3475,32 @@ body.page-id-3337 .reveal.jpf-reveal-in {
     transition: opacity .6s ease, transform .6s ease;
 }
 
+/* Header nav overflow fix, English pages only (scoped to body.jpf-en-context,
+   added by jpf_add_english_slowth_body_class() for any /en/* request — not
+   just the home page, since all English pages share "Main menu-en" as
+   their header nav).
+   Main menu-en's new 7 items (Capabilities / Machining Examples /
+   Materials / Equipment / Quality / Company / Request a Quote) plus the
+   "REQUEST A QUOTE" header button don't fit the shared header's desktop-nav
+   row at any common desktop/laptop width — confirmed via headless-browser
+   testing that the button is pushed off-screen (not just visually tight)
+   at 1024/1200/1280/1366/1440px, only fitting again at ~1920px. Neve's own
+   desktop/mobile nav swap happens at a fixed 960px breakpoint
+   (.hide-on-desktop / .hide-on-tablet in the parent theme's
+   style-main-new.css), which is far too narrow for this item count. Rather
+   than fight that per-item, English pages keep using the already-tested
+   mobile hamburger nav (display:block, its own natural value at mobile
+   widths) all the way up to 1699px, matching the point where the desktop
+   nav is confirmed to actually fit. This only touches elements under
+   body.jpf-en-context, so the JP site's header keeps Neve's normal 960px
+   breakpoint unchanged. */
+@media (min-width: 960px) and (max-width: 1699px) {
+    body.jpf-en-context .header-main.hide-on-desktop {
+        display: block;
+    }
+
+    body.jpf-en-context .header-main.hide-on-mobile.hide-on-tablet {
+        display: none;
+    }
+}
+

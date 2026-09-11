@@ -699,6 +699,14 @@ function jpf_use_english_slowth_template( $template ) {
 }
 
 function jpf_add_english_slowth_body_class( $classes ) {
+    // General marker for any /en/* request, regardless of which specific
+    // page — used to scope the header-nav-overflow CSS fix below (Main
+    // menu-en's 7 items don't fit the shared header's desktop-nav width
+    // budget the way the JP menu did) to English pages only.
+    if ( jpf_is_english_request() ) {
+        $classes[] = 'jpf-en-context';
+    }
+
     if ( jpf_is_english_slowth_request() ) {
         $classes[] = 'wp-singular';
         $classes[] = 'page-template-default';
