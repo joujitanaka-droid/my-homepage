@@ -2786,6 +2786,23 @@ body.page-id-3337 .reveal.jpf-reveal-in {
    top page's design system). Colors/spacing are re-declared as their own
    CSS custom properties rather than reused from the JP page, so future
    changes to the JP top page's CSS cannot break this page's layout.
+
+   2026-09-14 fix: .jpf-en-home previously set its own overflow-x:hidden,
+   which broke the hero's 100vw full-bleed breakout (see .jpf-en-hero
+   below) — .jpf-en-home is only ~1170px wide (it's nested inside Neve's
+   normal content .container), so clipping overflow AT that element cut
+   off the hero's text content (h1/kicker/copy/CTAs, all positioned via
+   the hero's own padding relative to its full-viewport-width box) on the
+   left edge, well before it reached the true viewport boundary — visible
+   as "...ecision Machined Parts" / "...m Japan" with the first few
+   characters missing. getBoundingClientRect() on the text still reported
+   its "intended" unclipped position, which is why this wasn't obvious
+   from layout geometry alone; only rendering showed it. Removed here:
+   the English home's <body> already carries page-id-3435 (added by
+   jpf_add_english_slowth_body_class()), so it's already covered by the
+   existing "body.page-id-3435 .neve-main { overflow-x: hidden; }" rule
+   near the JP hero's own CSS above — .neve-main spans the full viewport
+   width, so it clips only genuine overflow, not this page's own content.
 ========================================================================= */
 
 .jpf-en-home {
@@ -2801,7 +2818,6 @@ body.page-id-3337 .reveal.jpf-reveal-in {
     --en-max-width: 1600px;
 
     color: var(--en-text);
-    overflow-x: hidden;
 }
 
 .jpf-en-home * {
